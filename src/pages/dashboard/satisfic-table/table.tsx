@@ -76,7 +76,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 
   const columns: TableColumnType[] = [
     {
-      title: "PUBLISHED",
+      title: "Published",
       dataIndex: "published",
       width: 100,
       render: (value: string) => convertESTDateFormat(value),
@@ -98,7 +98,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "VENDOR",
+      title: "Vendor",
       dataIndex: "vendor",
       width: 100,
       render: (value) => {
@@ -147,12 +147,12 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "PRODUCT",
+      title: "Product",
       dataIndex: "product",
       width: 120,
       render: (value: any) => {
         const array: any[] = value ? value.slice(1) : [];
-        console.log("array: ", array);
+
         const options: ReactNode[] = array.map((item: any, index: number) => (
           <p key={index}>{item.name}</p>
         ));
@@ -201,7 +201,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "CVSS SCORE",
+      title: "CVSS Score",
       dataIndex: "cvss_score",
       width: 130,
       render: (value: number) => {
@@ -228,7 +228,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "CVSS ESTIMATE",
+      title: "CVSS Estimate",
       dataIndex: "cvss_estimate",
       width: 150,
       render: (value: string) => {
@@ -254,7 +254,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "EPSS SCORE",
+      title: "EPSS Score",
       dataIndex: "epss_score",
       width: 90,
 
@@ -265,7 +265,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       ),
     },
     {
-      title: "TREND",
+      title: "Trend",
       dataIndex: "trend",
       width: 200,
 
@@ -292,7 +292,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "PATCHED",
+      title: "Patched",
       dataIndex: "patched",
       width: 100,
       render: (value: any) => {
@@ -304,7 +304,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       },
     },
     {
-      title: "EXPLOIT",
+      title: "Exploit",
       dataIndex: "exploit",
       width: 100,
       render: (value: number) => convertESTDateFormat(value),

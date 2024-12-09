@@ -18,12 +18,8 @@ interface IChartItem {
 const ChartItem: React.FC<IChartItem> = (props) => {
   const { header_label, header_value, subTitle, dataSet, noTitle } = props;
 
-  console.log("size: ", dataSet?.length);
-
   const topFive = dataSet?.slice(0, 5);
   const otherItems = dataSet?.slice(5);
-  console.log("topFive: ", topFive);
-  console.log("OtherItem: ", otherItems);
 
   // Sum the totals and averages of the remaining elements
   let otherTotal = 0;
