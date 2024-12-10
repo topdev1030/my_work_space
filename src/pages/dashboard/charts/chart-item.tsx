@@ -39,7 +39,7 @@ const ChartItem: React.FC<IChartItem> = (props) => {
   // Create the "other" object
   const otherObject = {
     id: "",
-    label: "Other",
+    label: "Others",
     total: otherTotal,
     average: otherAverage,
   };
@@ -85,6 +85,7 @@ const ChartItem: React.FC<IChartItem> = (props) => {
           pointStyle: "rectRounded",
           marginBottom: 10,
           padding: 20,
+          cursor: "pointer",
           color: "#6B6B6B",
           font: {
             family: "Poppins-Medium",
@@ -100,7 +101,11 @@ const ChartItem: React.FC<IChartItem> = (props) => {
     <div className="w-full relative border-radius-40 dashboard-chart-card padding-5">
       <div className="w-full padding-3">
         <p className="text-lg text-gray-500 mb-0">{header_label}</p>
-        <h1 className="text-5xl text-white mb-0">{header_value}</h1>
+        <h1 className="text-5xl text-white mb-0">
+          {header_value > 1000
+            ? `${Math.floor(header_value / 1000)}K`
+            : header_value}
+        </h1>
         <p className="text-base text-gray-500 mt-5">{subTitle}</p>
       </div>
       <div

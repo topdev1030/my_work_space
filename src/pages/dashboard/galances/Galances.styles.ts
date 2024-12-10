@@ -6,6 +6,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
     marginTop: 30,
     marginBottom: 15,
   },
+  cardContainer: {},
   galanceCard: {
     borderRadius: "30px",
     width: "100%",
@@ -13,6 +14,26 @@ const useStyles = createUseStyles((theme: Theme) => ({
     cursor: "auto",
     "& .ant-card-body": {
       padding: "15px 24px 10px 24px",
+    },
+    "@media (min-width: 1200px)": {
+      "& .ant-col-xl-12": {
+        maxWidth: "100%",
+      },
+    },
+    "@media (min-width: 996px)": {
+      "& .ant-col-lg-16": {
+        maxWidth: "100%",
+      },
+    },
+    "@media (min-width: 768px)": {
+      "& .ant-col-md-20": {
+        maxWidth: "100%",
+      },
+    },
+    "@media (min-width: 576px)": {
+      "& .ant-col-sm-24": {
+        maxWidth: "100%",
+      },
     },
   },
   galanceSubTitle: {

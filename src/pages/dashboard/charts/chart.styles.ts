@@ -5,7 +5,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
   chart: {
     "& canvas": {
       height: 320,
-      width: 355,
+      width: "100%",
     },
   },
 }));

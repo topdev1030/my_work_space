@@ -13,8 +13,8 @@ interface chartProps {
 export const ChartPanel: React.FC<chartProps> = ({ valueData, pieData }) => {
   return (
     <div className="w-full mt-10">
-      <Row gutter={32} justify="space-between">
-        <Col span={8}>
+      <Row gutter={[32, 32]} justify="space-between">
+        <Col lg={24} xl={12} xxl={8}>
           <ChartItem
             header_label="Total Vulnerabilities"
             header_value={valueData.total}
@@ -23,7 +23,7 @@ export const ChartPanel: React.FC<chartProps> = ({ valueData, pieData }) => {
             noTitle=""
           />
         </Col>
-        <Col span={8}>
+        <Col lg={24} xl={12} xxl={8}>
           <ChartItem
             header_label="Weaponized Vulnerabilities"
             header_value={valueData.weaponized}
@@ -32,7 +32,7 @@ export const ChartPanel: React.FC<chartProps> = ({ valueData, pieData }) => {
             noTitle="No attribution of malware families available at the moment."
           />
         </Col>
-        <Col span={8}>
+        <Col lg={24} xl={12} xxl={8}>
           <ChartItem
             header_label="Exploited Vulnerabilities"
             header_value={valueData.exploited}

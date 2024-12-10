@@ -11,21 +11,14 @@ const useStyles = createUseStyles((theme: Theme) => ({
     backgroundColor: "#4096ff",
   },
   contentStyle: {
-    textAlign: "flex-start",
+    textAlign: "start",
     minHeight: 120,
-    color: "#fff",
     backgroundColor: "#1C1C1C",
-  },
-  siderStyle: {
-    textAlign: "center",
-    lineHeight: "120px",
-    color: "#fff",
-    backgroundColor: "#1677ff",
-  },
-  footerStyle: {
-    textAlign: "center",
-    color: "#fff",
-    backgroundColor: "#4096ff",
+    display: "flex",
+    flexDirection: "column",
+    color: theme.colors.colorText,
+    padding: "20px 20px 0px 20px",
+    marginLeft: 235,
   },
   layoutStyle: {
     minHeight: "100vh",

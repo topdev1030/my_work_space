@@ -368,9 +368,6 @@ const AdminReports = () => {
 
   const sendMessageToAllUsers = async () => {
     try {
-      console.log(
-        "sendMessageToAllUserssendMessageToAllUserssendMessageToAllUsers"
-      );
       const currentdate = new Date();
       const dataToSave = {
         title: "New report has been uploaded",
@@ -796,8 +793,6 @@ const AdminReports = () => {
   const date = dayjs(new Date().toISOString().split("T")[0]).format(
     "MM/DD/YYYY"
   );
-
-  // console.log(new Date(data.upload_date_time).toISOString().split("T")[0])
 
   // Handle page change
   const handlePageChange = (page) => {

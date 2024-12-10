@@ -119,33 +119,36 @@ const SideBar = () => {
 
   return (
     <Sider className={styles.siderStyle}>
-      <div
-        className={styles.logoContainer}
-        onClick={() => navigate("/dashboard")}
-      >
-        <img className={styles.logoImg} src={ImgLogo} alt="logo" />
-        <Text className={styles.logoTitle}>Threat Intelligence</Text>
-      </div>
-      <div className={styles.profileCardContainer}>
-        <Image
-          width={85}
-          preview={false}
-          className={styles.imgAvatar}
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        />
-        <div className={styles.cardDescription}>
-          <Text className={styles.cardGreetings}>Welcome Back</Text>
-          <Text className={styles.cardProfileName}>Benjamin Garcia</Text>
-          <Text className={styles.cardContact}>benjamingarcia@gmail.com</Text>
+      <div>
+        <div
+          className={styles.logoContainer}
+          onClick={() => navigate("/dashboard")}
+        >
+          <img className={styles.logoImg} src={ImgLogo} alt="logo" />
+          <Text className={styles.logoTitle}>Threat Intelligence</Text>
         </div>
+        <div className={styles.profileCardContainer}>
+          <Image
+            width={85}
+            preview={false}
+            className={styles.imgAvatar}
+            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          />
+          <div className={styles.cardDescription}>
+            <Text className={styles.cardGreetings}>Welcome Back</Text>
+            <Text className={styles.cardProfileName}>Benjamin Garcia</Text>
+            <Text className={styles.cardContact}>benjamingarcia@gmail.com</Text>
+          </div>
+        </div>
+        <Menu
+          className={styles.menuItem}
+          openKeys={[location.pathname]}
+          selectedKeys={[location.pathname]}
+          mode="inline"
+          items={items}
+        />
       </div>
-      <Menu
-        className={styles.menuItem}
-        openKeys={[location.pathname]}
-        selectedKeys={[location.pathname]}
-        mode="inline"
-        items={items}
-      />
+
       <Menu
         className={clsx(styles.menuItem, styles.bottomMenuItem)}
         openKeys={[location.pathname]}

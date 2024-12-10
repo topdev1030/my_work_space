@@ -7,6 +7,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { GalanceProps } from "./Galances.types";
 // styles
 import { useStyles } from "./Galances.styles";
+import clsx from "clsx";
 
 const Galances: React.FC<GalanceProps> = ({
   totalReports,
@@ -44,9 +45,9 @@ const Galances: React.FC<GalanceProps> = ({
   return (
     <div className={styles.galanceContainer}>
       <h2 className={styles.galanceTitle}>Data at a glance</h2>
-      <Row gutter={16} justify="space-between" style={{ marginTop: 30 }}>
+      <Row gutter={[16, 16]} justify="space-between" className={clsx("mt-7")}>
         {galanceData.map((card, index) => (
-          <Col key={index} xs={16} sm={14} md={12} lg={6}>
+          <Col key={index} lg={24} xl={12} xxl={6}>
             <Card
               className={styles.galanceCard}
               style={{ backgroundColor: card.color }}

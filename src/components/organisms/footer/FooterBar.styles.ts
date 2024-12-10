@@ -15,6 +15,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
       color: "#6B6B6B",
     },
     alignSelf: "center",
+    marginLeft: 235,
   },
 }));
 

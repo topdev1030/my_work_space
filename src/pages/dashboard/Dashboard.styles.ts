@@ -3,15 +3,6 @@ import alpha from "color-alpha";
 import { Theme } from "@/theme";
 
 const useStyles = createUseStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    color: theme.colors.colorText,
-  },
-  mainContainer: {
-    padding: "20px 20px 0px 20px",
-    backgroundColor: "#1C1C1C",
-  },
   lineCardContainer: {
     marginBottom: 15,
     marginTop: 15,

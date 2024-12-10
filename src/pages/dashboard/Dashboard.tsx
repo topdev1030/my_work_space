@@ -199,7 +199,6 @@ const Dashboard: React.FC = () => {
   };
 
   const increaseCount = () => {
-    console.log("clicked:");
     setShowSize(vulnerabilityData.length + count);
   };
 
@@ -224,43 +223,36 @@ const Dashboard: React.FC = () => {
   }, [filterOption]);
 
   return (
-    <div
-      className={cx(
-        styles.root,
-        location.pathname === "/dashboard" && { marginRight: 400 }
-      )}
+    <Col
+      className={cx(location.pathname === "/dashboard" && { marginRight: 400 })}
     >
-      <Content>
-        <Col className={styles.mainContainer}>
-          <Head />
-          <div className="dashboard-page-container">
-            <div className="w-full">
-              <SearchForm setParams={setParams} params={params} />
-            </div>
-            <ChartPanel valueData={chartData} pieData={pieData} />
-            <div className="mt-10 w-full">
-              <Title
-                className="font-poppines"
-                style={{ fontSize: 20, color: "#FFFFFF", alignSelf: "start" }}
-              >
-                Vulnerabilites
-              </Title>
-              <SatisficTable
-                tableData={vulnerabilityData}
-                increaseCount={increaseCount}
-              />
-            </div>
-            <div className="w-full mt-8">
-              <Galances
-                totalReports={totalReports}
-                totalUploads={totalUploads}
-                totalMessages={totalMessages}
-              />
-            </div>
-          </div>
-        </Col>
-      </Content>
-    </div>
+      <Head />
+      <div className="dashboard-page-container">
+        <div className="w-full">
+          <SearchForm setParams={setParams} params={params} />
+        </div>
+        <ChartPanel valueData={chartData} pieData={pieData} />
+        <div className="mt-10 w-full">
+          <Title
+            className="font-poppines"
+            style={{ fontSize: 20, color: "#FFFFFF", alignSelf: "start" }}
+          >
+            Vulnerabilites
+          </Title>
+          <SatisficTable
+            tableData={vulnerabilityData}
+            increaseCount={increaseCount}
+          />
+        </div>
+        <div className="mt-8">
+          <Galances
+            totalReports={totalReports}
+            totalUploads={totalUploads}
+            totalMessages={totalMessages}
+          />
+        </div>
+      </div>
+    </Col>
   );
 };
 

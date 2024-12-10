@@ -38,10 +38,12 @@ export const convertESTDateFormat = (value: any): string => {
 
 // Hex alpha color
 export const interpolateColor = (score: any) => {
-  const lowColor = "#6B6B6B";
+  const lowColor = "#F7FF5F";
   const highColor = "#FF7B23";
-  const minScore = 0.0;
+  const minScore = 5.3;
   const maxScore = 10.0;
+
+  if (score < 5.3) return "#F7FF5F";
 
   const lowRGB = {
     r: parseInt(lowColor.substr(1, 2), 16),
