@@ -10,7 +10,7 @@ import { convertESTDateFormat, interpolateColor } from "@/helpers";
 // styles
 import { tableStyles } from "./table.styles";
 // types
-import { Vulnerability, AIType } from "./table.types";
+import { Vulnerability } from "./table.types";
 
 interface dataProps {
   tableData: Vulnerability[];
@@ -160,10 +160,10 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
         );
         const content = <div>{options}</div>;
 
-        return value?.array.length !== 0 ? (
+        return value?.array?.length !== 0 ? (
           <div
             className={clsx(
-              value.array.length < 2
+              value?.array?.length < 2
                 ? "justify-center"
                 : "items-center flex-column",
               "flex"
@@ -178,7 +178,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
                   WebkitLineClamp: 1,
                 }}
               >
-                {value?.array[0]}
+                {value?.array ? value?.array[0] : ""}
               </p>
               {!value.status ? (
                 <Tag
@@ -193,7 +193,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
                 ""
               )}
             </p>
-            {value?.array.length > 1 ? (
+            {value?.array?.length > 1 ? (
               <Popover
                 content={content}
                 trigger="click"
@@ -201,8 +201,8 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
               >
                 <span>
                   +
-                  {value?.array && value.array.length > 0
-                    ? value.array.length - 1
+                  {value?.array && value?.array?.length > 0
+                    ? (value?.array?.length || 0) - 1
                     : 0}
                 </span>
                 <span> more</span>
@@ -221,10 +221,10 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
       dataIndex: "product",
       width: 150,
       render: (value: any) => {
-        const flatArray = value?.array.flat(Infinity);
+        const flatArray = value?.array?.flat(Infinity);
 
-        const newArray: any[] = flatArray.slice(1);
-        const options: ReactNode[] = newArray.map(
+        const newArray: any[] = flatArray?.slice(1);
+        const options: ReactNode[] = newArray?.map(
           (item: any, index: number) => <p key={index}>{item.name}</p>
         );
         const content = <div>{options}</div>;
@@ -232,7 +232,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
         return flatArray ? (
           <div
             className={clsx(
-              flatArray.length < 2
+              flatArray?.length < 2
                 ? "justify-center"
                 : "items-center flex-column",
               "flex"
@@ -247,7 +247,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
                   WebkitLineClamp: 1,
                 }}
               >
-                {flatArray[0].name}
+                {flatArray && Array.isArray(flatArray) ? flatArray[0].name : ""}
               </p>
               {!value.status ? (
                 <Tag
@@ -286,7 +286,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
     {
       title: "CVSS Score",
       dataIndex: "cvss_score",
-      width: 150,
+      width: 170,
       render: (value: number) => {
         return value ? (
           <Tag
@@ -313,14 +313,14 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
     {
       title: "CVSS Estimate",
       dataIndex: "cvss_estimate",
-      width: 170,
+      width: 200,
       render: (value: string) => {
         let colorValue = "";
         switch (value) {
           case "HIGH":
             colorValue = tableStyle.highColor;
             break;
-          case "Medium":
+          case "MEDIUM":
             colorValue = tableStyle.mediumColor;
             break;
           default:
