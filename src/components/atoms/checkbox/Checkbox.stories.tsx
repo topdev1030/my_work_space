@@ -13,7 +13,6 @@ export default {
 
 export const Basic = () => {
   const onChange = (e: CheckboxChangeEvent) => {
-    console.log(`checked = ${e.target.checked}`);
   };
   return <Checkbox onChange={onChange}>Checkbox</Checkbox>;
 };

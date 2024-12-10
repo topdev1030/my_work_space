@@ -11,12 +11,10 @@ export default {
 
 export const Default = () => {
   const confirm = (e?: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
     message.success("Click on Yes");
   };
 
   const cancel = (e?: React.MouseEvent<HTMLElement>) => {
-    console.log(e);
     message.error("Click on No");
   };
 

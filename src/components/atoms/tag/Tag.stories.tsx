@@ -11,7 +11,6 @@ export default {
 export const Default = () => {
   const onCloseTag = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    console.log("Clicked! But prevent default.");
   };
 
   return (

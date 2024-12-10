@@ -11,9 +11,7 @@ export default {
 };
 
 export const Basic = () => {
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const onChange: DatePickerProps["onChange"] = (date, dateString) => {};
 
   return (
     <Space direction="vertical">

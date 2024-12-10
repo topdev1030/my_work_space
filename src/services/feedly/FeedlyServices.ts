@@ -306,9 +306,9 @@ const feedlyService = {
   getVulnerabilityData: ({ token, param }) => {
     return new Promise((resolve, reject) => {
       axios
-        .post(config.vulnerabilites.url, param, {
+        .post(config.vulnerabilities.url, param, {
           headers: {
-            Authorization: `Bearer ${config.vulnerabilites.accessToken}`,
+            Authorization: `Bearer ${config.vulnerabilities.accessToken}`,
             Accept: "application/json",
             "Content-Type": "application/json",
           },

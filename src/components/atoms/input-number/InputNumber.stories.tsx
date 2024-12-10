@@ -13,9 +13,7 @@ export default {
 const { Option } = Select;
 
 export const Default = () => {
-  const onChange = (value: number) => {
-    console.log("changed", value);
-  };
+  const onChange = (value: number) => {};
 
   const selectBefore = (
     <Select defaultValue="add" style={{ width: 60 }}>

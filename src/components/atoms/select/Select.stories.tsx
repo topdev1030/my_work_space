@@ -7,9 +7,7 @@ export default {
 };
 
 export const Default = () => {
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
+  const handleChange = (value: string) => {};
 
   return (
     <Space wrap>

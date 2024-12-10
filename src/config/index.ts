@@ -1,5 +1,9 @@
 const ENV = process.env.REACT_APP_ENV || process.env.NODE_ENV || "dev";
 
+import dotenv from "dotenv";
+// enable env variables
+dotenv.config();
+
 const getConfig = () => {
   switch (ENV) {
     case "prod":
@@ -29,13 +33,13 @@ const getConfig = () => {
         reCaptcha: {
           siteKey: "6LehwBApAAAAAOGHYJyMxfRtuEQHyq3LbqbSRXmQ",
         },
-        feedly: {
-          url: "https://api.feedly.com/v3/streams/contents?streamID=enterprise/omegaconsulting/category/c883b46f-69fe-43cf-a605-300e150f6ae0&count=20&quot;",
-          accessToken: "fe_oD6DnA4RSZ0mIpOhKFnsz0bYJxoghkp4ShDYgCFM",
-        },
-        vulnerabilites: {
+        vulnerabilities: {
           url: "https://api.feedly.com/v3/trends/vulnerability-dashboard",
           accessToken: "fe_kaea1FhxKgzIRlR1inft4TfZSIuMhtk4J67uDBv7",
+        },
+        feedly: {
+          url: process.env.REACT_APP_FEEDLY_URL || "",
+          accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
         },
       };
     case "dev":
@@ -65,13 +69,13 @@ const getConfig = () => {
         reCaptcha: {
           siteKey: "6LehwBApAAAAAOGHYJyMxfRtuEQHyq3LbqbSRXmQ",
         },
-        feedly: {
-          url: "https://api.feedly.com/v3/streams/contents?streamID=enterprise/omegaconsulting/category/c883b46f-69fe-43cf-a605-300e150f6ae0&count=20&quot;",
-          accessToken: "fe_oD6DnA4RSZ0mIpOhKFnsz0bYJxoghkp4ShDYgCFM",
-        },
-        vulnerabilites: {
+        vulnerabilities: {
           url: "https://api.feedly.com/v3/trends/vulnerability-dashboard",
           accessToken: "fe_kaea1FhxKgzIRlR1inft4TfZSIuMhtk4J67uDBv7",
+        },
+        feedly: {
+          url: process.env.REACT_APP_FEEDLY_URL || "",
+          accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
         },
       };
     case "local":
@@ -102,13 +106,13 @@ const getConfig = () => {
         reCaptcha: {
           siteKey: "6LehwBApAAAAAOGHYJyMxfRtuEQHyq3LbqbSRXmQ",
         },
-        feedly: {
-          url: "https://api.feedly.com/v3/streams/contents?streamID=enterprise/omegaconsulting/category/c883b46f-69fe-43cf-a605-300e150f6ae0&count=20&quot;",
-          accessToken: "fe_oD6DnA4RSZ0mIpOhKFnsz0bYJxoghkp4ShDYgCFM",
-        },
-        vulnerabilites: {
+        vulnerabilities: {
           url: "https://api.feedly.com/v3/trends/vulnerability-dashboard",
           accessToken: "fe_kaea1FhxKgzIRlR1inft4TfZSIuMhtk4J67uDBv7",
+        },
+        feedly: {
+          url: process.env.REACT_APP_FEEDLY_URL || "",
+          accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
         },
       };
   }
