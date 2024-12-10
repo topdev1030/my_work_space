@@ -20,7 +20,7 @@ export const ChartPanel: React.FC<chartProps> = ({ valueData, pieData }) => {
             header_value={valueData.total}
             dataSet={pieData.vendorsData}
             subTitle="Most affected vendors and products"
-            noTitle=""
+            noTitle="No affected vendors and products available at the moment."
           />
         </Col>
         <Col lg={24} xl={12} xxl={8}>

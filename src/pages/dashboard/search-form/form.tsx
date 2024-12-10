@@ -31,7 +31,7 @@ const date_options = [
   },
   {
     key: "3",
-    value: "Last 1 Month",
+    value: "Last 30 Days",
   },
 ];
 

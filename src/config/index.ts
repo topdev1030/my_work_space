@@ -1,9 +1,5 @@
 const ENV = process.env.REACT_APP_ENV || process.env.NODE_ENV || "dev";
 
-import dotenv from "dotenv";
-// enable env variables
-dotenv.config();
-
 const getConfig = () => {
   switch (ENV) {
     case "prod":

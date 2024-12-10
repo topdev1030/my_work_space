@@ -36,7 +36,7 @@ const ChartItem: React.FC<IChartItem> = (props) => {
 
   otherAverage = Math.round((otherTotal / total) * 100);
 
-  // Create the "other" object
+  // Create the "Others" object
   const otherObject = {
     id: "",
     label: "Others",
@@ -97,7 +97,7 @@ const ChartItem: React.FC<IChartItem> = (props) => {
     maintainAspectRatio: false,
   };
 
-  return dataSet?.length > 2 ? (
+  return (
     <div className="w-full relative border-radius-40 dashboard-chart-card padding-5">
       <div className="w-full padding-3">
         <p className="text-lg text-gray-500 mb-0">{header_label}</p>
@@ -108,17 +108,19 @@ const ChartItem: React.FC<IChartItem> = (props) => {
         </h1>
         <p className="text-base text-gray-500 mt-5">{subTitle}</p>
       </div>
-      <div
-        className={clsx(styles.chart, "w-full relative flex justify-center")}
-      >
-        <Space align="center">
-          <Doughnut data={data} options={options} />
-        </Space>
-      </div>{" "}
-    </div>
-  ) : (
-    <div className="w-full relative border-radius-40 dashboard-chart-card padding-5 flex items-center text-center h-full">
-      <div className="text-base text-gray-500">{noTitle}</div>
+      {dataSet?.length > 2 ? (
+        <div
+          className={clsx(styles.chart, "w-full relative flex justify-center")}
+        >
+          <Space align="center">
+            <Doughnut data={data} options={options} />
+          </Space>
+        </div>
+      ) : (
+        <div className="w-full relative border-radius-40 dashboard-chart-card padding-5 flex items-center text-center h-full">
+          <div className="text-base text-gray-500">{noTitle}</div>
+        </div>
+      )}
     </div>
   );
 };
