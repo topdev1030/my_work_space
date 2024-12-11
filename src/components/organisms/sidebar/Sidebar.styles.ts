@@ -186,8 +186,6 @@ const useStyles = createUseStyles((theme: Theme) => ({
     },
   },
   bottomMenuItem: {
-    position: "fixed",
-    bottom: 0,
     marginBottom: 20,
   },
 }));

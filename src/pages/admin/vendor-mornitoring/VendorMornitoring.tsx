@@ -97,8 +97,9 @@ const VendorMonitoring = () => {
     sort: DEFAULT_SORTER,
   });
   const [loadingOptions, setLoadingOptions] = useState<boolean>(false);
+  const [loadingVendors, setLoadingVendors] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<VendorMornitor[]>([]);
-  const [dataSourceTemp, setDataSourceTemp] = useState<Upload[]>([]);
+  const [dataSourceTemp, setDataSourceTemp] = useState<VendorMornitor[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [openCreateVendorModal, setOpenCreateVendorModal] =
     useState<boolean>(false);
@@ -111,7 +112,7 @@ const VendorMonitoring = () => {
 
   useEffect(() => {
     setIsTableView(
-      localStorage.getItem("omega-admin-uploads-page-view") == "false"
+      localStorage.getItem("omega-admin-vendor-page-view") == "false"
         ? false
         : true
     );
@@ -126,15 +127,6 @@ const VendorMonitoring = () => {
     setOpenCreateVendorModal(false);
     form.resetFields();
   };
-
-  const getUploadFilters = useCallback(() => {
-    const { dbconnstrs = [] } = filters;
-    if (dbconnstrs.length > 0) return filters;
-    return {
-      ...filters,
-      dbconnstrs: customerOptions.map(({ value }) => value),
-    };
-  }, [filters, customerOptions]);
 
   const getUploadSorter = (
     sorter: SorterResult<Upload> | SorterResult<Upload>[]
@@ -166,25 +158,25 @@ const VendorMonitoring = () => {
     }
   };
 
-  // const fetchUploads = async () => {
-  //   setLoadingUploads(true);
-  //   try {
-  //     // load uploads
-  //     const { uploads, metadata } = await uploadService.getAllUploads({
-  //       token: accessToken,
-  //       filters: getUploadFilters(),
-  //       offset: 0,
-  //       limit: -1,
-  //     });
-  //     setDataSource(uploads);
-  //     setDataSourceTemp(uploads);
-  //     setTotalCount(metadata.total);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoadingUploads(false);
-  //   }
-  // };
+  const fetchVendors = async () => {
+    // setLoadingVendors(true);
+    // try {
+    //   // load uploads
+    //   const { uploads, metadata } = await uploadService.getAllUploads({
+    //     token: accessToken,
+    //     filters: getVendorFilters(),
+    //     offset: 0,
+    //     limit: -1,
+    //   });
+    //   setDataSource(uploads);
+    //   setDataSourceTemp(uploads);
+    //   setTotalCount(metadata.total);
+    // } catch (error) {
+    //   console.log(error);
+    // } finally {
+    //   setLoadingVendors(false);
+    // }
+  };
 
   const onChangeUploadedByFilter = debounce((value: string) => {
     setFilters((prevFilters) => ({
@@ -285,6 +277,8 @@ const VendorMonitoring = () => {
   useEffect(() => {
     if (accessToken) {
       setDataSource(objectsArray);
+      setDataSourceTemp(objectsArray);
+      setTotalCount(objectsArray?.length)
     }
   }, [accessToken, customerOptions, filters, pagination]);
 
@@ -293,16 +287,6 @@ const VendorMonitoring = () => {
     setCreatingVendor(true);
 
     try {
-      // await reportService.createReport({
-      //   ...values,
-      //   cust_id: connStr2CustID(values.cust_id),
-      //   upload_date_time: dayjs().toISOString(),
-      //   uploaded_by: userInfo?.email,
-      //   token: accessToken,
-      // });
-      // await fetchReports();
-
-      // reset form & close modal
       form.resetFields();
       setOpenCreateVendorModal(false);
 
@@ -313,6 +297,13 @@ const VendorMonitoring = () => {
       message.error("Failed to create a vendor, try again later.");
     } finally {
       setCreatingVendor(false);
+    }
+  };
+
+  const resetClearForm = () => {
+    form.resetFields();
+    if (dataSource.length !== totalCount) {
+      setDataSource(dataSourceTemp);
     }
   };
 
@@ -431,6 +422,48 @@ const VendorMonitoring = () => {
     setCurrentPage(page);
   };
 
+  const handleSearch = (values: {
+    vendor_name: string;
+    client_agent: string;
+  }) => {
+    const { vendor_name, client_agent } = values;
+    // console.log("values: ", values);
+
+    const tempD = dataSourceTemp;
+    const filtered = tempD.filter((entry) => {
+      let isVendorMatch = true;
+      let isClientMatch = true;
+
+      // Check for cust_id match
+      if (vendor_name) {
+        const vendor_str = String(vendor_name)?.replace(/\s+/g, "")?.toLowerCase();
+        const entry_vendor_name = String(entry.vendor_name || "").toLowerCase();
+        isVendorMatch = entry_vendor_name?.replace(/\s+/g, "")?.includes(vendor_str) ? true : false;
+      } else isVendorMatch = true;
+
+      // Check for upload_date_time match
+      if (client_agent) {
+        const client_agent_str = String(client_agent).toLowerCase();
+        const entry_client_agent = String(entry.client_agent || "").toLowerCase();
+        isVendorMatch = entry_client_agent.includes(client_agent_str) ? true : false;
+      } else {
+        // No upload_date_time filter specified, all entries pass
+        isClientMatch = true;
+      }
+
+      return isVendorMatch && isClientMatch;
+    });
+
+    if (!vendor_name && !client_agent) {
+      if (dataSource.length !== totalCount) {
+        setDataSource(dataSourceTemp);
+      }
+    } else {
+      setDataSource(filtered);
+    }
+  };
+
+
   // Change the pagenation previous and next button
   const itemRender: PaginationProps["itemRender"] = (
     _,
@@ -454,8 +487,7 @@ const VendorMonitoring = () => {
         </Text>
         <Button
           className={styles.createMessageBtn}
-          // disabled={loadingMessages}
-          // onClick={() => sendMessageToAllUsers()}
+          disabled={loadingVendors}
           onClick={() => setOpenCreateVendorModal(true)}
         >
           <Text className={clsx([styles.createBtn], "font-poppines")}>
@@ -465,10 +497,10 @@ const VendorMonitoring = () => {
       </div>
       <div className={styles.searchContainer}>
         <Title className={styles.panelTitle}>Search Panel</Title>
-        <Form form={form}>
+        <Form form={form} onFinish={handleSearch}>
           <Row className={styles.searchOptionContainer} gutter={32}>
             <Col className={styles.fieldContainer} flex={4}>
-              <Form.Item name="cust_id" className="w-full mb-0">
+              <Form.Item name="vendor_name" className="w-full mb-0">
                 <Title className={styles.fieldTitle}>Search</Title>
                 <Input
                   size="large"
@@ -476,15 +508,14 @@ const VendorMonitoring = () => {
                   className={styles.searchBar}
                   prefix={<SearchOutlined />}
                   onChange={(e) => {
-                    form.setFieldValue("cust_id", e.target.value);
+                    form.setFieldValue("vendor_name", e.target.value);
                   }}
                 />
               </Form.Item>
             </Col>
             <Col className={styles.fieldContainer} flex={2}>
               <Form.Item
-                name="upload_date_time"
-                initialValue="Till Today"
+                name="client_agent"
                 className="w-full mb-0"
               >
                 <Title className={styles.fieldTitle}>Client Agent</Title>
@@ -493,7 +524,7 @@ const VendorMonitoring = () => {
                   className={styles.selectBar}
                   options={options}
                   onChange={(value) =>
-                    form.setFieldValue("upload_date_time", value)
+                    form.setFieldValue("client_agent", value)
                   }
                 />
               </Form.Item>
@@ -502,16 +533,16 @@ const VendorMonitoring = () => {
               <Button
                 htmlType="submit"
                 className={styles.searchBtn}
-                // disabled={loadingUploads}
+                disabled={loadingVendors}
               >
                 <Text className={styles.createBtn}>Search</Text>
               </Button>
             </Col>
             <Col className={styles.fieldContainer} flex={1}>
               <Button
-                // onClick={resetClearForm}
+                onClick={resetClearForm}
                 className={styles.clearBtn}
-                // disabled={loadingUploads}
+                disabled={loadingVendors}
               >
                 <Text className={styles.createBtn}>Clear</Text>
               </Button>
@@ -583,7 +614,7 @@ const VendorMonitoring = () => {
                   },
                   showSizeChanger: false,
                 }}
-                // loading={loadingUploads}
+                loading={loadingVendors}
                 onChange={onTableChange}
               />
             </div>
