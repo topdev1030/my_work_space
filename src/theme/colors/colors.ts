@@ -78,6 +78,30 @@ const colors: Theme["colors"] = {
   colorBrandYellow200: "#ff9800",
   colorBrandGray100: "#404e5e",
   colorTextGray: "#6B6B6B",
+  // black color
+  colorMainBgBlack: "#1C1C1C",
+  colorSiderBGBlack: "#000000",
+  colorFormBGBlack: "#282937",
+  colorFieldOddBGBlack: "#272727",
+  colorFieldEvenBGBlack: "#151515",
+  colorModalBgBlack: "#141414",
+  colorFormBorderBlack: "",
+  colorFontTitleBlack: "#FFFFFF",
+  // white color
+  colorMainBgWhite: "#F3F3F3",
+  colorSiderBGWhite: "#FFFFFF",
+  colorFormBGWhite: "#FFFFFF",
+  colorFieldOddBGWhite: "#FFFFFF",
+  colorFieldEvenBGWhite: "#E7E7E7",
+  colorModalBgwhite: "#FFFFFF",
+  colorFormBorderWhite: "#8E8E8E",
+  colorFontTitleWhite: "#000000",
+  // other color
+  colorBgLightBlue: "#498DCE",
+  colorBgOrange: "#FF7B23",
+  colorBgLightOrange: "#C38A39",
+  colorBlack600: "#6B6B6B",
+  colorBlack900: "#000000",
 };
 
 export type ColorName = keyof Theme["colors"];

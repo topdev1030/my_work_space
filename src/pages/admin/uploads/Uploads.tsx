@@ -1,15 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 
 import moment from "moment";
-
-// Icon Imports
-import viewIcon from "../../../static/images/view.png";
-import viewCardIcon from "../../../static/images/view_expand.png";
-import viewDetailIcon from "../../../static/images/viewIcon.png";
-import downloadIcon from "../../../static/images/downloadIcon.png";
-
-import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
-
+import debounce from "debounce";
+import dayjs from "dayjs";
+// import ant design
 import {
   Row,
   Col,
@@ -22,87 +16,48 @@ import {
   Pagination as CardPagination,
   PaginationProps,
 } from "antd";
-
+import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import type {
   TablePaginationConfig,
   SorterResult,
 } from "antd/es/table/interface";
-import debounce from "debounce";
-import dayjs from "dayjs";
 
 // components
 import type { TableColumnType } from "@/components";
-import { Button, Input, Table, FilterDropdown, Typography } from "@/components";
-
+import { Button, Input, Table, Typography } from "@/components";
 // Import TransitionGroup for animation
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-
 // helpers
 import { downloadFile } from "@/helpers";
-
 // services
 import { commonService, uploadService, hookService } from "@/services";
-
 // redux
 import { useAppSelector } from "@/redux";
 import { selectAccessToken } from "@/redux/auth";
-
 // types
 import type { Upload, Pagination } from "@/types";
 import type { AllUploadsFilters } from "@/services/upload";
 import type { CustomerOption } from "./Uploads.types";
-
 // constants
 import { DEFAULT_PAGE_SIZE } from "@/components/atoms/table";
-import { DEBOUNCE_WAIT, DEFAULT_SORTER } from "./Uploads.constants";
-
+import {
+  DEBOUNCE_WAIT,
+  DEFAULT_SORTER,
+  date_options,
+  sort_report_options,
+} from "./Uploads.constants";
 // styles
 import { useStyles } from "./Uploads.styles";
-
-import { FooterBar } from "@/components/organisms/footer";
+// Icon imports
+import viewIcon from "../../../static/images/view.png";
+import viewCardIcon from "../../../static/images/view_expand.png";
+import viewDetailIcon from "../../../static/images/viewIcon.png";
+import downloadIcon from "../../../static/images/downloadIcon.png";
 
 const { Title, Text } = Typography;
 
-interface SearchDataType {
-  cust_id: string;
-  upload_date_time: string;
-}
-
 const AdminUploads = () => {
-  const date_options = [
-    {
-      key: "0",
-      value: "Till Today",
-    },
-    {
-      key: "1",
-      value: "1 Week",
-    },
-    {
-      key: "2",
-      value: "1 Month",
-    },
-    {
-      key: "3",
-      value: "1 Year",
-    },
-  ];
-
-  const sort_report_options = [
-    {
-      key: "date",
-      value: "Date",
-    },
-    {
-      key: "customer_name",
-      value: "Customer Name",
-    },
-  ];
-
-  const [form] = Form.useForm();
-
   const [isTableView, setIsTableView] = useState<boolean>(true);
-
   const [customerOptions, setCustomerOptions] = useState<CustomerOption[]>([]);
   const [filters, setFilters] = useState<AllUploadsFilters>({});
   const [pagination, setPagination] = useState<Pagination>({
@@ -114,12 +69,12 @@ const AdminUploads = () => {
   const [loadingOptions, setLoadingOptions] = useState<boolean>(false);
   const [dataSource, setDataSource] = useState<Upload[]>([]);
   const [dataSourceTemp, setDataSourceTemp] = useState<Upload[]>([]);
-
   const [totalCount, setTotalCount] = useState<number>(0);
 
   const accessToken = useAppSelector(selectAccessToken);
 
   const styles = useStyles();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     setIsTableView(
@@ -430,10 +385,7 @@ const AdminUploads = () => {
         <Form form={form} onFinish={handleSearch}>
           <Row className={styles.searchOptionContainer} gutter={32}>
             <Col className={styles.fieldContainer} flex={4}>
-              <Form.Item
-                name="cust_id"
-                style={{ width: "100%", marginBottom: 0 }}
-              >
+              <Form.Item name="cust_id" className="w-full mb-0">
                 <Title className={styles.fieldTitle}>Search</Title>
                 <Input
                   size="large"
@@ -450,7 +402,7 @@ const AdminUploads = () => {
               <Form.Item
                 name="upload_date_time"
                 initialValue="Till Today"
-                style={{ width: "100%", marginBottom: 0 }}
+                className="w-full mb-0"
               >
                 <Title className={styles.fieldTitle}>Date</Title>
                 <Select
@@ -535,7 +487,7 @@ const AdminUploads = () => {
             <div className={styles.content}>
               <Table
                 className={styles.uploadsTable}
-                rowClassName={(record, index) =>
+                rowClassName={(_, index) =>
                   index % 2 === 0 ? styles.tdStyleOdd : styles.tdStyleEven
                 }
                 rowKey="upload_date_time"

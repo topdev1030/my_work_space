@@ -9,6 +9,7 @@ import {
   CustomerUploads,
   AdminReports,
   AdminUploads,
+  VendorMonitoring,
 } from "@/pages";
 
 // components
@@ -42,6 +43,10 @@ const App = () => {
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/uploads" element={<AdminUploads />} />
             <Route path="/admin/messages" element={<AdminMessages />} />
+            <Route
+              path="/admin/vendor-monitoring"
+              element={<VendorMonitoring />}
+            />
           </Route>
 
           {/* Customer */}

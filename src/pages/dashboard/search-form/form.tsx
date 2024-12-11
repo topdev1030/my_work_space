@@ -88,7 +88,7 @@ const SearchForm: React.FC<searchProps> = ({ setParams, params }) => {
   );
 
   return (
-    <div className="mt-8">
+    <div className="mt-6">
       <h1 className="mt-4 mb-6">Filters</h1>
       <Form form={form} layout="inline" initialValues={initialValues}>
         <Form.Item

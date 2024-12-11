@@ -22,6 +22,7 @@ import Dashboard from "../../../static/images/Dashboard_1.svg";
 import reportIcon from "../../../static/images/reports.png";
 import logoutIcon from "../../../static/images/logout.png";
 import settingIcon from "../../../static/images/setting.svg";
+import vendorMornitoringIcon from "../../../static/images/vendor-monitoring.svg";
 
 // Components
 import { Typography } from "@/components/atoms";
@@ -64,6 +65,18 @@ const SideBar = () => {
       key: "/admin/messages",
       label: <Link to="/admin/messages">Messages</Link>,
       icon: <Image width={35} height={35} preview={false} src={messageIcon} />,
+    },
+    {
+      key: "/admin/vendor-monitoring",
+      label: <Link to="/admin/vendor-monitoring">Vendor Monitoring</Link>,
+      icon: (
+        <Image
+          width={30}
+          height={30}
+          preview={false}
+          src={vendorMornitoringIcon}
+        />
+      ),
     },
   ];
 

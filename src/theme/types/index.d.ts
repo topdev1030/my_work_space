@@ -87,6 +87,30 @@ export interface Theme {
     colorBrandYellow200: string;
     colorBrandGray100: string;
     colorTextGray: string;
+    // black color
+    colorMainBgBlack: string;
+    colorSiderBGBlack: string;
+    colorFormBGBlack: string;
+    colorFieldOddBGBlack: string;
+    colorFieldEvenBGBlack: string;
+    colorModalBgBlack: string;
+    colorFormBorderBlack: string;
+    colorFontTitleBlack: string;
+    // white color
+    colorMainBgWhite: string;
+    colorSiderBGWhite: string;
+    colorFormBGWhite: string;
+    colorFieldOddBGWhite: string;
+    colorFieldEvenBGWhite: string;
+    colorModalBgwhite: string;
+    colorFormBorderWhite: string;
+    colorFontTitleWhite: string;
+    // other colors
+    colorBgLightBlue: string;
+    colorBgOrange: string;
+    colorBgLightOrange: string;
+    colorBlack600: string;
+    colorBlack900: string;
   };
   animations: Record<string, object>;
 }

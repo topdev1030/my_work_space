@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-
 import moment from "moment";
 
 import {
@@ -14,7 +13,6 @@ import {
   Divider,
   Pagination as CardPagination,
   PaginationProps,
-  Spin,
 } from "antd";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import type { UploadRequestOption } from "rc-upload/lib/interface";
@@ -84,7 +82,6 @@ import viewCardIcon from "../../../static/images/view_expand.png";
 import viewDetailIcon from "../../../static/images/viewIcon.png";
 import deleteIcon from "../../../static/images/deleteIcon.png";
 import downloadIcon from "../../../static/images/downloadIcon.png";
-import { FooterBar } from "@/components/organisms/footer";
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -1296,7 +1293,7 @@ const AdminReports = () => {
             <Button
               htmlType="button"
               size="large"
-              style={{ backgroundColor: "transparent" }}
+              className={styles.clearBtn}
               onClick={onResetCreateReportForm}
             >
               Cancel

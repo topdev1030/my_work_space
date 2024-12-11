@@ -32,10 +32,11 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
   panelTitle: {
     "&.ant-typography": {
-      fontFamily: "Poppins-ExtraLight",
+      fontFamily: "Poppins-Medium",
       fontSize: 20,
       color: "#FFF",
       marginBottom: 20,
+      fontWeight: 500,
     },
   },
   searchOptionContainer: {
@@ -85,6 +86,9 @@ const useStyles = createUseStyles((theme: Theme) => ({
       color: "#8E8E8E",
       backgroundColor: "#282937 !important",
     },
+    "& .ant-select-arrow": {
+      color: "#498DCE",
+    },
   },
   searchBtn: {
     width: "100%",
@@ -118,9 +122,10 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
   optionTitle: {
     "&.ant-typography": {
-      fontFamily: "Poppins-ExtraLight",
+      fontFamily: "Poppins-Medium",
       fontSize: 20,
       color: "#FFF",
+      fontWeight: 500,
     },
   },
   sortContainer: {
@@ -162,7 +167,11 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
   viewIcon: {},
   createBtn: {
-    fontSize: 20,
+    "&.ant-typography": {
+      fontFamily: "Poppins-Medium",
+      fontSize: 16,
+      color: "#FFF",
+    },
   },
   uploadsTable: {
     flex: 1,
@@ -189,6 +198,9 @@ const useStyles = createUseStyles((theme: Theme) => ({
         color: theme.colors.colorText,
         fontWeight: 400,
         backgroundColor: "#1C1C1C",
+      },
+      "& .ant-table-content > table": {
+        tableLayout: "fixed !important",
       },
     },
     "& .ant-pagination": {
@@ -390,6 +402,101 @@ const useStyles = createUseStyles((theme: Theme) => ({
     overflow: "hidden",
     textOverflow: "ellipsis",
     marginBottom: 0,
+  },
+  createMessageBtn: {
+    height: 40,
+    backgroundColor: "#498DCE",
+    border: 0,
+    borderRadius: 10,
+  },
+  createMessageModal: {
+    width: "fit-content !important",
+    height: 720,
+    overflow: "auto",
+    "& ::-webkit-scrollbar": {
+      display: "none",
+    },
+    "& .ant-modal-content": {
+      width: 540,
+      padding: 20,
+      backgroundColor: "#141414 !important",
+      borderRadius: 20,
+    },
+    "& .ant-modal-header": {
+      color: "#8E8E8E",
+      backgroundColor: "#141414 !important",
+    },
+  },
+  createMessageForm: {
+    "& input, & input.form-control": {
+      width: "100%",
+      height: 50,
+      backgroundColor: "#282937 !important",
+    },
+    "& .ant-select-single": {
+      height: "50px !important",
+    },
+    "& .ant-select-selector": {
+      border: "1px solid #424242 !important",
+      borderRadius: 8,
+      backgroundColor: "#282937 !important",
+    },
+  },
+  formTitle: {
+    "&.ant-typography": {
+      textAlign: "start",
+      fontWeight: 400,
+      fontSize: 24,
+      textTransform: "none",
+      marginBottom: 20,
+    },
+  },
+  formLabel: {
+    fontWeight: 400,
+  },
+  formActions: {
+    marginTop: 10,
+    display: "flex",
+    alignItems: "center",
+    gap: 20,
+    "& > button": {
+      flex: 1,
+      height: 50,
+      fontSize: 16,
+    },
+  },
+  pdfPreviewModal: {
+    width: "fit-content",
+    "& > .ant-modal-content": {
+      width: 612,
+      padding: 0,
+      background: "none",
+      border: "none",
+      borderRadius: 20,
+      "& > .ant-modal-close": {
+        right: -28,
+        top: 0,
+      },
+    },
+  },
+  reportFileDragger: {
+    "& .ant-upload-drag-container": {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+  circleOR: {
+    width: 50,
+    height: 50,
+    backgroundColor: "#6B6B6B",
+    borderRadius: 25,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#141414",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 }));
 

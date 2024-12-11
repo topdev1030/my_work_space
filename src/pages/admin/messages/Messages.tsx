@@ -1059,7 +1059,11 @@ const AdminMessages: React.FC = () => {
             </Col>
           </Row>
           <div className={styles.formActions}>
-            <Button htmlType="button" onClick={onResetCreateMessageForm}>
+            <Button
+              htmlType="button"
+              className={styles.clearBtn}
+              onClick={onResetCreateMessageForm}
+            >
               Cancel
             </Button>
             <Button type="primary" htmlType="submit" loading={creatingMessage}>
