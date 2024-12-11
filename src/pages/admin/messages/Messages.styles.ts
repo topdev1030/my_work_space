@@ -8,7 +8,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
     backgroundColor: "#1C1C1C",
     minHeight: "calc(100vh - 70px)",
     position: "relative",
-    padding: "24px 24px 0 24px",
+    paddingBottom: 0,
   },
   header: {
     display: "flex",

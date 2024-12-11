@@ -110,14 +110,6 @@ const VendorMonitoring = () => {
   const styles = useStyles();
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    setIsTableView(
-      localStorage.getItem("omega-admin-vendor-page-view") == "false"
-        ? false
-        : true
-    );
-  }, []);
-
   const onCloseCreateVendorModal = () => {
     setOpenCreateVendorModal(false);
     form.resetFields();
@@ -158,32 +150,7 @@ const VendorMonitoring = () => {
     }
   };
 
-  const fetchVendors = async () => {
-    // setLoadingVendors(true);
-    // try {
-    //   // load uploads
-    //   const { uploads, metadata } = await uploadService.getAllUploads({
-    //     token: accessToken,
-    //     filters: getVendorFilters(),
-    //     offset: 0,
-    //     limit: -1,
-    //   });
-    //   setDataSource(uploads);
-    //   setDataSourceTemp(uploads);
-    //   setTotalCount(metadata.total);
-    // } catch (error) {
-    //   console.log(error);
-    // } finally {
-    //   setLoadingVendors(false);
-    // }
-  };
-
-  const onChangeUploadedByFilter = debounce((value: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      uploaded_by: value,
-    }));
-  }, DEBOUNCE_WAIT);
+  const fetchVendors = async () => {};
 
   const onTableChange = (
     { current, pageSize }: TablePaginationConfig,
@@ -230,49 +197,19 @@ const VendorMonitoring = () => {
     }
   };
 
-  // const onCustomRequest = async ({
-  //   file,
-  //   onProgress,
-  //   onSuccess,
-  //   onError,
-  // }: UploadRequestOption) => {
-  //   try {
-  //     if (!currentCustomerOption) return;
-
-  //     // get storage container name
-  //     const { storage_container_name } = currentCustomerOption;
-
-  //     // generate blob name
-  //     const fileName = (file as File).name;
-  //     const extension = fileName.slice(fileName.lastIndexOf(".") + 1);
-  //     const blobName = `${dayjs().valueOf()}.${extension}`;
-
-  //     // upload blob to azure storage
-  //     const payload: UploadFilePayload = {
-  //       file: file as Blob,
-  //       blobName,
-  //       containerName: storage_container_name,
-  //       token: accessToken,
-  //       onProgress: (percent) => onProgress?.({ percent }),
-  //     };
-  //     await azureService.uploadFile(payload);
-  //     onSuccess?.(null);
-
-  //     // update url field value
-  //     form.setFieldsValue({
-  //       url: `${getStorgeHostUrl()}/${storage_container_name}/${blobName}`,
-  //     });
-  //   } catch (error: any) {
-  //     onError?.(error);
-  //     message.error("Failed to upload a file, try again!");
-  //   }
-  // };
-
   useEffect(() => {
     if (accessToken) {
       fetchOptions();
     }
   }, [accessToken]);
+
+  useEffect(() => {
+    setIsTableView(
+      localStorage.getItem("omega-admin-vendor-page-view") == "false"
+        ? false
+        : true
+    );
+  }, []);
 
   useEffect(() => {
     if (accessToken) {
@@ -283,7 +220,6 @@ const VendorMonitoring = () => {
   }, [accessToken, customerOptions, filters, pagination]);
 
   const onSubmitCreateVendorForm = async (values: CreateVendorFormValues) => {
-    console.log("Values: ", values);
     setCreatingVendor(true);
 
     try {
@@ -427,8 +363,6 @@ const VendorMonitoring = () => {
     client_agent: string;
   }) => {
     const { vendor_name, client_agent } = values;
-    // console.log("values: ", values);
-
     const tempD = dataSourceTemp;
     const filtered = tempD.filter((entry) => {
       let isVendorMatch = true;
@@ -462,7 +396,6 @@ const VendorMonitoring = () => {
       setDataSource(filtered);
     }
   };
-
 
   // Change the pagenation previous and next button
   const itemRender: PaginationProps["itemRender"] = (
@@ -942,9 +875,7 @@ const VendorMonitoring = () => {
                   multiple={false}
                   name="file"
                   maxCount={1}
-                  accept=".pdf,.doc,.docx,.csv"
-                  // customRequest={onCustomRequest}
-                  // disabled={!currentCustomerOption}
+                  accept=".csv"
                 >
                   <p
                     className="ant-upload-text"
