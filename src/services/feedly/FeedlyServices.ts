@@ -321,31 +321,6 @@ const feedlyService = {
 				});
 		});
 	},
-	getArticleDataByCVEID: ({ cve_id, param }) => {
-		return new Promise((resolve, reject) => {
-			axios
-				.get("https://api.feedly.com/v3/entities/CVE-2024-50623", {
-					headers: {
-						Authorization:
-							"Bearer A2Av4qirIy7AL4yjLZixigTcROYxhcGXOXYXGoZEFhS7ZN2oLRmtKBExlKpQNkt66P5Rlf9aW3uB0sk9kisJREWglVDqdCbeHefKbgTPb0sVGZsH3z_UtidBaKMtFEtF2cMJQNbbxmRfMBXNlLvCgo8rwbEyUFiqeVINehG_c_6y5nXaWMHfJ4STPPG7U45eZMq5-ar-M4PBbA8ZBGHvmIPq3Ku8wf8SNR_cAfZSH2s9JNF6zmWYNdbNMMgOGZXPNH-40HrPan3pbBK47oeN:feedly",
-						Accept: "*/*",
-						"Content-Type": "application/json",
-					},
-					params: {
-						withStats: true,
-						ck: 1733976442784,
-						ct: "feedly.desktop",
-						cv: "31.0.2499",
-					},
-				})
-				.then(({ data }) => {
-					resolve(data);
-				})
-				.catch((err) => {
-					reject(err?.response?.data?.errors || []);
-				});
-		});
-	},
 };
 
 export { feedlyService };

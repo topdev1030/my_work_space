@@ -8,12 +8,12 @@ import { selectUserRole } from "@/redux/auth";
 import { RouteGuardProps } from "./RouteGuard.types";
 
 const RouteGuard = ({ roles = [] }: RouteGuardProps) => {
-  const userRole = useAppSelector(selectUserRole);
+	const userRole = useAppSelector(selectUserRole);
 
-  if (roles.includes(userRole) || roles.length === 0) {
-    return <Outlet />;
-  }
-  return <Navigate to="/" />;
+	// if (roles.includes(userRole) || roles.length === 0) {
+	return <Outlet />;
+	// }
+	// return <Navigate to="/" />;
 };
 
 export { RouteGuard };

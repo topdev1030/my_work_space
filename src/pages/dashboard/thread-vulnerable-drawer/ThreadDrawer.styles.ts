@@ -220,7 +220,14 @@ const useStyles = createUseStyles((theme: Theme) => ({
 		padding: "10px 20px",
 		height: 44,
 		backgroundColor: "transparent",
-		borderColor: "#498DCE",
+	},
+	graphContainer: {
+		"& .ant-image": {
+			border: "1px solid",
+			borderRadius: 5,
+			padding: "0px 10px",
+			width: "100%",
+		},
 	},
 	referenceContainer: {
 		"& .ant-image-img": {

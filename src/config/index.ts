@@ -37,10 +37,6 @@ const getConfig = () => {
 					url: process.env.REACT_APP_FEEDLY_URL || "",
 					accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
 				},
-				feeldyEntry: {
-					url: process.env.REACT_APP_ENV_FEEDLY_ENTRIES_URL || "",
-					accessToken: process.env.REACT_APP_ENV_FEEDLY_ENTRIES_TOKEN,
-				},
 			};
 		case "dev":
 			return {
@@ -76,10 +72,6 @@ const getConfig = () => {
 				feedly: {
 					url: process.env.REACT_APP_FEEDLY_URL || "",
 					accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
-				},
-				feeldyEntry: {
-					url: process.env.REACT_APP_ENV_FEEDLY_ENTRIES_URL || "",
-					accessToken: process.env.REACT_APP_ENV_FEEDLY_ENTRIES_TOKEN,
 				},
 			};
 		case "local":
@@ -117,10 +109,6 @@ const getConfig = () => {
 				feedly: {
 					url: process.env.REACT_APP_FEEDLY_URL || "",
 					accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
-				},
-				feeldyEntry: {
-					url: process.env.REACT_APP_ENV_FEEDLY_ENTRIES_URL || "",
-					accessToken: process.env.REACT_APP_ENV_FEEDLY_ENTRIES_TOKEN,
 				},
 			};
 	}

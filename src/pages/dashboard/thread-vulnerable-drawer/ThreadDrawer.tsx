@@ -1,333 +1,478 @@
-import { useState, ReactNode, useEffect } from "react";
-import clsx from "clsx";
-
-import { Drawer, Spin, DrawerProps, Typography, Button } from "@/components";
-
-import { Col, Divider, Row, Timeline, Image, Flex } from "antd";
 import {
-	LaptopOutlined,
-	ReadOutlined,
-	StarOutlined,
-	ArrowDownOutlined,
-	CheckOutlined,
-} from "@ant-design/icons";
-// services
+	useState,
+	useMemo,
+	useCallback,
+	useEffect,
+	Fragment,
+	ReactNode,
+} from "react";
+import { message } from "antd";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import axios from "axios";
+
+// components
+import {
+	Button,
+	Tag,
+	Typography,
+	Timeline,
+	Spin,
+	CVSSDial,
+	DrawerProps,
+	SeverityDial,
+} from "@/components";
+
+// icons
+import { Icons } from "@/theme/icons";
+
+// service
 import { feedlyService } from "@/services";
 
-import { useStyles } from "./ThreadDrawer.styles";
+// redux
+import { useAppSelector } from "@/redux";
+import { selectAccessToken } from "@/redux/auth";
 
-const { Text, Title } = Typography;
+// utils
+import {
+	getCVEFeatures,
+	getCVETimelineItems,
+	generateCVEOverviewText,
+} from "../../news/vuln-drawer/NewsVulnDrawer.utils";
+
+// types
+import type { FeedlyCVE, FeedlyCVEEvent } from "@/types";
+import type { SeverityDialProps } from "@/components";
+import type { NewsVulnDrawerProps } from "../../news/vuln-drawer/NewsVulnDrawer.types";
+
+// constants
+import { initVulnCVE } from "../../news/vuln-drawer/NewsVulnDrawer.constants";
+
+// styles
+import { useStyles } from "../../news/vuln-drawer/NewsVulnDrawerCVE.styles";
+
+dayjs.extend(relativeTime);
+
+const { Title, Text, Paragraph } = Typography;
 
 type ThreadDrawerProps = {
-	open: boolean;
-	onClose?: DrawerProps["onClose"];
 	cve_id: string;
-	children?: ReactNode;
 };
 
-const ThreadDrawer = ({
-	open,
-	onClose,
-	cve_id,
-	children,
-}: ThreadDrawerProps) => {
-	console.log("cve_id: ", cve_id);
-	const [loadingThreatData, setLoadingThreatData] = useState<boolean>(false);
-	const [dataSource, setDataSource] = useState<object>({} as any);
+const ThreadDrawer = ({ cve_id }: ThreadDrawerProps) => {
+	const [vulnCVE, setVulnCVE] = useState<FeedlyCVE>(initVulnCVE);
+	const [CVEEvents, setCVEEvents] = useState<FeedlyCVEEvent[]>([]);
+	const [graphSVG, setGraphSVG] = useState<string>("");
+	const [loadingCVEData, setLoadingCVEData] = useState<boolean>(false);
+
+	const accessToken = useAppSelector(selectAccessToken);
 
 	const styles = useStyles();
 
-	const fetchArticleEntry = async () => {
-		setLoadingThreatData(true);
+	const onOpenNVD = useCallback(() => {
+		window.open(`https://nvd.nist.gov/vuln/detail/${vulnCVE.cveid}`, "_blank");
+	}, [vulnCVE.cveid]);
 
-		// load article entry
+	const onCopyCVEOverview = useCallback(async () => {
 		try {
-			const entry = await feedlyService.getArticleDataByCVEID({
-				cve_id: cve_id,
-				param: {
-					withStats: true,
-					ck: 1733976442784,
-					ct: "feedly.desktop",
-					cv: "31.0.2499",
-				},
-			});
-			console.log("Entry: ", entry);
-			setDataSource(dataSource);
+			const overviewText = generateCVEOverviewText(vulnCVE);
+			await navigator.clipboard.writeText(overviewText);
+
+			// notify message
+			message.success("Copied to clipboard");
 		} catch (error) {
-			console.log("error: ", error);
+			console.log(error);
+			message.error("Copy to clipboard failed, try again later.");
+		}
+	}, [vulnCVE]);
+
+	const fetchCVEData = async () => {
+		setLoadingCVEData(true);
+		try {
+			// get CVE id
+			const cveId = cve_id.split("&")[0].trim();
+
+			// get cve & events
+			const [cve, events] = await Promise.all([
+				feedlyService.getThreatEntity({
+					token: accessToken,
+					resource_id: cveId,
+				}),
+				feedlyService.getCVEEvents({
+					token: accessToken,
+					cve_id: cveId,
+				}),
+			]);
+
+			setVulnCVE(cve as FeedlyCVE);
+			setCVEEvents(events);
+
+			// load graph svg
+			const { data: svgContent } = await axios.get((cve as FeedlyCVE).graphUrl);
+			setGraphSVG(svgContent.replace(/ns0:path/g, "path"));
+		} catch (error) {
+			console.log(error);
 		} finally {
-			setLoadingThreatData(false);
+			setLoadingCVEData(false);
 		}
 	};
 
 	useEffect(() => {
-		if (cve_id) {
-			fetchArticleEntry();
+		if (accessToken && cve_id) {
+			fetchCVEData();
 		}
-	}, [cve_id]);
+	}, [accessToken, cve_id]);
+
+	const timelineItems = useMemo(
+		() => getCVETimelineItems(vulnCVE.cveid, CVEEvents),
+		[vulnCVE, CVEEvents]
+	);
+
+	const features = useMemo(() => getCVEFeatures(vulnCVE), [vulnCVE]);
+
+	const {
+		label,
+		description,
+		cvssV3,
+		cweIds = [],
+		publishedDate,
+		publicationDateInfo = [],
+		executiveSummary,
+		affectedProducts = [],
+		affectedProductsEstimate = [],
+		idMapping = [],
+		exploits = [],
+		proofOfExploits = [],
+		patchDetails = [],
+	} = vulnCVE;
+
+	const renderMeterDial = () => {
+		const { cvssCategoryEstimate } = vulnCVE;
+		const cvss = vulnCVE?.cvssV3?.baseScore;
+
+		if (cvss) {
+			return <CVSSDial cvss={cvss} epss={Number(vulnCVE.epssScore)} />;
+		}
+		if (cvssCategoryEstimate) {
+			return (
+				<SeverityDial
+					severity={cvssCategoryEstimate as SeverityDialProps["severity"]}
+				/>
+			);
+		}
+		return null;
+	};
 
 	return (
-		<Drawer
-			title="Hello World"
-			style={{ backgroundColor: "#141414" }}
-			open={open}
-			width={1200}
-			onClose={onClose}
-			placement="right"
-		>
-			<div className={clsx([styles.entryContainer], "font-medium")}>
-				<Spin
-					size="default"
-					tip="Loading Vulnerable Data details..."
-					spinning={loadingThreatData}
-				>
-					<div className={styles.entryHeader}>
-						<Row justify="space-between" className="w-full">
-							<Col span={8} className="justify-start flex flex-column">
-								<Text style={{ color: "#f44336" }}>TRENDING</Text>
-								<Text className="text-xl">CVE-2024-54143</Text>
-								<Text className="text-base mt-1">
-									Use of Weak Hash (CWE-328)
-								</Text>
-								<p className="text-xs mb-0">
-									Published: Dec 6, 2024 / Updated: 5d ago
-								</p>
-							</Col>
-							<Col span={8}>col-8</Col>
-						</Row>
+		<Spin size="default" tip="Loading CVE info..." spinning={loadingCVEData}>
+			<div className={styles.header}>
+				<div className={styles.heading}>
+					{features.length > 0 && (
+						<div className={styles.features}>
+							{features.map(({ text }, idx) => (
+								<Fragment key={idx}>
+									{idx > 0 && (
+										<span className={styles.featureSeparator}>•</span>
+									)}
+									<Text className={styles.feature}>{text}</Text>
+								</Fragment>
+							))}
+						</div>
+					)}
+					<Title className={styles.label}>{label}</Title>
+					{cweIds.length > 0 && (
+						<Paragraph className={styles.cweInfo}>
+							{cweIds[0].name} ({cweIds[0].cweID})
+						</Paragraph>
+					)}
+					{publishedDate && publicationDateInfo.length > 0 && (
+						<Paragraph className={styles.metadata}>
+							Published: {dayjs(publishedDate).format("MMM D, YYYY")} / Updated:{" "}
+							{dayjs(publicationDateInfo[0].publishedDate).fromNow()}
+						</Paragraph>
+					)}
+					<div className={styles.actions}>
+						<Button
+							icon={<Icons glyph="nvd-outlined" />}
+							onClick={() => onOpenNVD()}
+						/>
+						<Button
+							icon={<Icons glyph="copy-outlined" />}
+							onClick={() => onCopyCVEOverview()}
+						/>
 					</div>
-					<div className={clsx([styles.entryContent], "gap-2")}>
-						<div>
-							<Text className="text-base font-bold">Summary</Text>
-							<p className="text-base mt-1">
-								A vulnerability has been discovered in openwrt/asu, an image on
-								demand server for OpenWrt based distributions. The flaw is in
-								the request hashing mechanism, which truncates SHA-256 hashes to
-								only 12 characters. This significant reduction in entropy makes
-								it feasible for an attacker to generate hash collisions. The
-								vulnerability affects the security of the image building and
-								distribution process for OpenWrt-based firmware.
-							</p>
+				</div>
+				<div className={styles.dial}>{renderMeterDial()}</div>
+			</div>
+			<div className={styles.content}>
+				{/* Summary */}
+				<div className={styles.section}>
+					<div className={styles.sectionTitle}>
+						<Title level={2}>Summary</Title>
+					</div>
+					<div className={styles.sectionContent}>
+						<Paragraph className={styles.description}>{description}</Paragraph>
+					</div>
+				</div>
+
+				{/* Impact */}
+				{executiveSummary?.impact && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={2}>Impact</Title>
 						</div>
-						<div>
-							<Text className="text-base font-bold">Impact</Text>
-							<p className="text-base mt-1">
-								The impact of this vulnerability is severe. An attacker can
-								exploit this flaw to serve a previously built malicious image in
-								place of a legitimate one, effectively poisoning the artifact
-								cache. This allows the delivery of compromised images to
-								unsuspecting users. The severity is amplified by the potential
-								to combine this with other attacks, such as a command injection
-								in Imagebuilder. This combination could allow malicious users to
-								inject arbitrary commands into the build process, resulting in
-								the production of malicious firmware images that are signed with
-								the legitimate build key. The vulnerability has a CVSS v4 base
-								score of 9.3, which is categorized as Critical severity. It has
-								high impact on the confidentiality, integrity, and availability
-								of the vulnerable system. This means that unauthorized access to
-								sensitive information, unauthorized modification of system data,
-								and significant disruption to system availability are all
-								possible outcomes.
-							</p>
-						</div>
-						<div>
-							<Text className="text-base font-bold">Exploitation</Text>
-							<p className="text-base mt-1">
-								There is no evidence that a public proof-of-concept exists.
-								There is no evidence of proof of exploitation at the moment.
-							</p>
-						</div>
-						<div>
-							<Text className="text-base font-bold">Patch</Text>
-							<p className="text-base mt-1">
-								A patch for this vulnerability is available. The issue has been
-								fixed in commit 920c8a1 of the openwrt/asu project.
-							</p>
-						</div>
-						<div>
-							<Text className="text-base font-bold">Mitigation</Text>
-							<p className="text-base mt-1">
-								To mitigate this vulnerability, the following steps are
-								recommended: 1. Update openwrt/asu to the latest version that
-								includes the patch (commit 920c8a1) as soon as possible. 2. If
-								immediate patching is not feasible, implement additional
-								verification steps for image integrity. This could include full
-								hash comparison or digital signature verification. 3. Closely
-								monitor and audit the image building process for any suspicious
-								activities or unexpected changes. 4. Review and enhance the
-								overall security of the firmware build and distribution pipeline
-								to prevent similar vulnerabilities in the future. 5. Educate
-								users and administrators about the risks associated with this
-								vulnerability and the importance of using only verified and
-								properly signed firmware images.
-							</p>
+						<div className={styles.sectionContent}>
+							<Paragraph className={styles.description}>
+								{executiveSummary?.impact}
+							</Paragraph>
 						</div>
 					</div>
-					<div className="mt-6">
-						<p className="mb-0 word-break-all">
-							CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N/E:X/CR:X/IR:X/AR:X/MAV:X/MAC:X/MAT:X/MPR:X/MUI:X/MVC:X/MVI:X/MVA:X/MSC:X/MSI:X/MSA:X/S:X/AU:X/R:X/V:X/RE:X/U:X
-						</p>
+				)}
+
+				{/* Exploitation */}
+				{executiveSummary?.impact && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={2}>Exploitation</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<Paragraph className={styles.description}>
+								{executiveSummary?.exploitation}
+							</Paragraph>
+						</div>
 					</div>
-					<div className="mt-6 flex items-center">
-						<p className="mb-0 justify-between">TIMELINE</p>
-						<Divider style={{ minWidth: 0, margin: "0 20px" }} />
-						<Button variant="outlined" className={styles.button}>
-							Highlight Events
-						</Button>
+				)}
+
+				{/* Patch */}
+				{executiveSummary?.patch && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={2}>Patch</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<Paragraph className={styles.description}>
+								{executiveSummary?.patch}
+							</Paragraph>
+						</div>
 					</div>
-					<div className="mt-6">
+				)}
+
+				{/* Mitigation */}
+				{executiveSummary?.mitigation && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={2}>Mitigation</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<Paragraph className={styles.description}>
+								{executiveSummary?.mitigation}
+							</Paragraph>
+						</div>
+					</div>
+				)}
+
+				{/* CVSS Vector */}
+				{cvssV3?.vectorString && (
+					<Paragraph className={styles.vector}>{cvssV3.vectorString}</Paragraph>
+				)}
+
+				{/* Timeline */}
+				<div className={styles.section}>
+					<div className={styles.sectionTitle}>
+						<Title level={3}>TIMELINE</Title>
+					</div>
+					<div className={styles.sectionContent}>
 						<Timeline
-							items={[
-								{
-									color: "#6B6B6B",
+							className={styles.timeline}
+							items={timelineItems.map(
+								({ title, ts, description: desc, sourceName, url }) => ({
 									children: (
-										<div className="flex flex-column gap-1">
-											<Text className="text-base font-semibold">
-												CVE Assignment
-											</Text>
-											<p className="text-xl">
-												NVD published the first details for CVE-2024-54143
-											</p>
-											<p className="text-xs">Dec 6, 2024 at 12:15 PM</p>
+										<div className={styles.timelineItem}>
+											<Title className={styles.timelineTitle}>{title}</Title>
+											<Paragraph className={styles.timelineDescription}>
+												{desc}
+											</Paragraph>
+											<div className={styles.timelineMetadata}>
+												<Text>
+													{dayjs(ts).format("MMM D, YYYY [at] h:mm a")}
+												</Text>
+												{sourceName && <Text>/</Text>}
+												{url ? (
+													<Button type="link" href={url} target="_blank">
+														{sourceName}
+													</Button>
+												) : (
+													<Text>{sourceName}</Text>
+												)}
+											</div>
 										</div>
 									),
-								},
-								{
-									color: "#6B6B6B",
-									children: "Solve initial network problems 2015-09-01",
-								},
-								{
-									color: "#6B6B6B",
-									children: "Technical testing 2015-09-01",
-								},
-								{
-									color: "#6B6B6B",
-									children: "Network problems being solved 2015-09-01",
-								},
-							]}
+								})
+							)}
 						/>
+						{graphSVG && (
+							<div
+								className={styles.eventsGraph}
+								dangerouslySetInnerHTML={{ __html: graphSVG }}
+							/>
+						)}
 					</div>
-					<div className="mt-6">
-						<Image
-							src="https://storage.googleapis.com/feedly-ml-public/cve-trends/card-graphs/v2.0/CVE-2024-54143-ee410dd61dbc8d3e81df60624d246eb2.svg"
-							className="flex items-center w-full"
-							preview={false}
-						/>
-					</div>
-					<div className="mt-6 flex flex-column">
-						<Divider orientation="left">AFFECTED SYSTEM</Divider>
-						<Button
-							variant="outlined"
-							icon={<LaptopOutlined />}
-							className={styles.button}
-						>
-							Optnwrt/openwrt
-						</Button>
-					</div>
-					<div className="mt-6 flex flex-column">
-						<Divider orientation="left">EXPLOITED</Divider>
-						<Button
-							variant="outlined"
-							icon={<LaptopOutlined />}
-							className={styles.button}
-						>
-							https://github.com/aramosf/cve-2024-42327
-						</Button>
-					</div>
-					<div className="mt-6 flex flex-column">
-						<Divider orientation="left">CWE-328 ATTACK PATTERNS</Divider>
-						<div className="flex flex-column gap-1">
-							<Button
-								variant="outlined"
-								icon={<LaptopOutlined />}
-								className={styles.button}
-							>
-								CAPEC-461: Web Services API Signature Forgery Leveraging Hash
-								Function Extension Weakness
-							</Button>
-							<Button
-								variant="outlined"
-								icon={<LaptopOutlined />}
-								className={styles.button}
-							>
-								CAPEC-461: Web Services API Signature Forgery Leveraging Hash
-								Function Extension Weakness
-							</Button>
+				</div>
+
+				{/* Affected Systems */}
+				{affectedProducts?.length > 0 && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={3}>AFFECTED SYSTEMS</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<div className={styles.tags}>
+								{affectedProducts?.map(({ vendor, products = [] }, idx) => (
+									<Tag
+										key={`affected_system_${idx}`}
+										className={styles.tag}
+										onClick={onOpenNVD}
+									>
+										<Icons glyph="screen-outlined" />
+										<Text className={styles.tagText}>
+											{vendor}
+											<span>/</span>
+											<b>{products.map(({ name }) => name).join(", ")}</b>
+										</Text>
+									</Tag>
+								))}
+							</div>
 						</div>
 					</div>
-					<Row
-						className="mt-10 gap-6 nowrap"
-						justify="space-between"
-						style={{ padding: "30px 0" }}
-					>
-						<Col span={16} className="justify-start flex flex-column">
-							<article>
-								<Text className="text-sm">REFERENCE</Text>
-								<Flex vertical gap="middle" className="mt-4">
-									<div
-										className={clsx([styles.referenceContainer], "flex gap-3")}
-									>
-										<Image
-											src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-											preview={false}
-											width={120}
-										/>
-										<div className="flex flex-column gap-1">
-											<Flex gap="middle" justify="space-between">
-												<Text className="text-sm font-semibold text-gray-300">
-													CVE-2024-50623 Vulnerability Identified in Cleo
-													Software Products
+				)}
+
+				{/* Affected Systems */}
+				{!affectedProducts ||
+					(affectedProductsEstimate?.length > 0 && (
+						<div className={styles.section}>
+							<div className={styles.sectionTitle}>
+								<Title level={3}>AFFECTED SYSTEMS</Title>
+							</div>
+							<div className={styles.sectionContent}>
+								<div className={styles.tags}>
+									{affectedProductsEstimate?.map(
+										({ vendor, products = [] }, idx) => (
+											<Tag
+												key={`affected_system_${idx}`}
+												className={styles.tag}
+												onClick={onOpenNVD}
+											>
+												<Icons glyph="screen-outlined" />
+												<Text className={styles.tagText}>
+													{vendor}
+													<span>/</span>
+													<b>{products.map(({ name }) => name).join(", ")}</b>
 												</Text>
-												<Flex gap="small">
-													<ReadOutlined />
-													<StarOutlined />
-													<ArrowDownOutlined />
-													<CheckOutlined />
-												</Flex>
-											</Flex>
-											<Text className="text-base mt-1">
-												Threat Intelligence Report
-											</Text>
-											<p className="text-xs mb-0">
-												A critical zero-day vulnerability, CVE-2024-50623, has
-												been identified in Cleo software products, allowing
-												unauthorized file operations and prompting calls for
-												enhanced security measures.
-											</p>
-										</div>
-									</div>
-								</Flex>
-							</article>
-						</Col>
-						<Col span={8} className="flex flex-column items-start">
-							<Text className="text-sm">CVSS V3.1</Text>
-							<Flex vertical gap={10} className="mt-4">
-								<div>
-									<Text className="text-sm">Attack Vector: </Text>
-									<Text className="text-sm text-gray-300">Network</Text>
+											</Tag>
+										)
+									)}
 								</div>
-								<div>
-									<Text className="text-sm">Attack Vector: </Text>
-									<Text className="text-sm text-gray-300">Network</Text>
-								</div>
-								<div>
-									<Text className="text-sm">Attack Vector: </Text>
-									<Text className="text-sm text-gray-300">Network</Text>
-								</div>
-								<div>
-									<Text className="text-sm">Attack Vector: </Text>
-									<Text className="text-sm text-gray-300">Network</Text>
-								</div>
-								<div>
-									<Text className="text-sm">Attack Vector: </Text>
-									<Text className="text-sm text-gray-300">Network</Text>
-								</div>
-							</Flex>
-						</Col>
-					</Row>
-				</Spin>
+							</div>
+						</div>
+					))}
+
+				{/* Attack Patterns */}
+				{idMapping?.length > 0 && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={3}> {idMapping[0].id} ATTACK PATTERNS</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<div className={styles.tags}>
+								{idMapping?.map(({ id, name }, idx) => (
+									<Tag
+										key={`attack_patterns_${idx}`}
+										className={styles.tag}
+										onClick={onOpenNVD}
+									>
+										<Icons glyph="screen-outlined" />
+										<Text className={styles.tagText}>
+											{id}
+											<span>:</span>
+											<b>{name}</b>
+										</Text>
+									</Tag>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
+
+				{/* Exploits */}
+				{exploits.length > 0 && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={3}>EXPLOITS</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<div className={styles.tags}>
+								{exploits.map((url, idx) => (
+									<Tag
+										key={`exploit_${idx}`}
+										className={styles.tag}
+										onClick={() => window.open(url, "_blank")}
+									>
+										<Icons glyph="target-outlined" />
+										<Text className={styles.tagText}>{url}</Text>
+									</Tag>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
+
+				{/* Proof of Exploits */}
+				{proofOfExploits.length > 0 && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={3}>PROOF OF EXPLOIT</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<div className={styles.tags}>
+								{proofOfExploits.map((url, idx) => (
+									<Tag
+										key={`proof_of_exploit_${idx}`}
+										className={styles.tag}
+										onClick={() => window.open(url, "_blank")}
+									>
+										<Icons glyph="target-outlined" />
+										<Text className={styles.tagText}>{url}</Text>
+									</Tag>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
+
+				{/* Patches */}
+				{patchDetails.length > 0 && (
+					<div className={styles.section}>
+						<div className={styles.sectionTitle}>
+							<Title level={3}>PATCHES</Title>
+						</div>
+						<div className={styles.sectionContent}>
+							<div className={styles.tags}>
+								{patchDetails.map(({ title, url }, idx) => (
+									<Tag
+										key={`patch_${idx}`}
+										className={styles.tag}
+										onClick={() => window.open(url, "_blank")}
+									>
+										<Icons glyph="atom-outlined" />
+										<Text className={styles.tagText}>{title}</Text>
+									</Tag>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
 			</div>
-		</Drawer>
+		</Spin>
 	);
 };
 
