@@ -1,8 +1,6 @@
 import React, { useState, useEffect, ReactNode, useRef } from "react";
 import { Popover, Image, Spin, Drawer } from "antd";
 import clsx from "clsx";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 // components
 import { Button, Table, Tag } from "@/components";
 import { ThreadDrawer } from "../thread-vulnerable-drawer/ThreadDrawer";
@@ -26,23 +24,6 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 	const [loadingPage, setLoadingPage] = useState<boolean>(true);
 	const [loadingData, setLoadingData] = useState<boolean>(false);
 	const [openThreadDrawer, setOpenThreadDrawer] = useState(false);
-
-	const drawerRef = useRef(null);
-
-	const exportToPDF = () => {
-		const input = drawerRef.current;
-		if (!input) return;
-
-		html2canvas(input, { scale: 2 }).then((canvas) => {
-			const imgData = canvas.toDataURL("image/png");
-			const pdf = new jsPDF("p", "mm", "a4");
-			const pdfWidth = pdf.internal.pageSize.getWidth();
-			const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-			pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-			pdf.save("drawer-content.pdf");
-		});
-	};
 
 	const showDrawer = (value: string) => {
 		setCveID(value);
@@ -477,10 +458,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 				placement="right"
 				title={
 					<div className="flex justify-end">
-						<Button
-							onClick={exportToPDF}
-							className={clsx([tableStyle.button], "text-end")}
-						>
+						<Button className={clsx([tableStyle.button], "text-end")}>
 							Export as PDF
 						</Button>
 					</div>
@@ -488,7 +466,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 				open={openThreadDrawer}
 				onClose={onCloseDrawer}
 			>
-				<div ref={drawerRef} className={tableStyle.entryContainer}>
+				<div className={tableStyle.entryContainer}>
 					<ThreadDrawer cve_id={cveID} />
 				</div>
 			</Drawer>

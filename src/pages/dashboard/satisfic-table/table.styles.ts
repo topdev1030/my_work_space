@@ -5,7 +5,11 @@ const tableStyles = createUseStyles((theme: Theme) => ({
 	drawerRoot: {
 		zIndex: 99,
 		"& .ant-drawer-body": {
+			backgroundColor: "#141414",
 			padding: 0,
+		},
+		"& .ant-drawer-header": {
+			backgroundColor: "#141414",
 		},
 	},
 	entryContainer: {
