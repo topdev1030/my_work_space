@@ -8,319 +8,344 @@ import { MAX_ENTRIES } from "./FeedlyServices.constants";
 
 // types
 import type {
-  GetTrendingVulnerabilitiesPayload,
-  GetTrendingVulnerabilitiesResponse,
-  GetTopStoriesResponse,
-  GetTrendingNewMalwareResponse,
-  GetTrendingAttackerResponse,
-  GetArticlesByStreamIDPayload,
-  GetArticlesByStreamIDResponse,
-  GetTTPsPayload,
-  GetTTPsResponse,
-  GetThreatInfoPayload,
-  GetThreatTrendsResponse,
-  GetThreatEntityResponse,
-  GetThreatRelationshipsResponse,
-  GetThreatArticleCountGraphsResponse,
-  GetThreatExploitedVulnerabilitiesPayload,
-  GetThreatExploitedVulnerabilitiesResponse,
-  GetCVEEventsPayload,
-  GetCVEEventsResponse,
+	GetTrendingVulnerabilitiesPayload,
+	GetTrendingVulnerabilitiesResponse,
+	GetTopStoriesResponse,
+	GetTrendingNewMalwareResponse,
+	GetTrendingAttackerResponse,
+	GetArticlesByStreamIDPayload,
+	GetArticlesByStreamIDResponse,
+	GetTTPsPayload,
+	GetTTPsResponse,
+	GetThreatInfoPayload,
+	GetThreatTrendsResponse,
+	GetThreatEntityResponse,
+	GetThreatRelationshipsResponse,
+	GetThreatArticleCountGraphsResponse,
+	GetThreatExploitedVulnerabilitiesPayload,
+	GetThreatExploitedVulnerabilitiesResponse,
+	GetCVEEventsPayload,
+	GetCVEEventsResponse,
 } from "./FeedlyServices.types";
 import { defaultRequestHeaders } from "@/constants";
 
 const request = axios.create({
-  baseURL: `${config.api.baseUrl}/feedly`,
-  timeout: config.api.timeout,
-  headers: {
-    "X-App-Source": defaultRequestHeaders["X-App-Source"],
-  },
+	baseURL: `${config.api.baseUrl}/feedly`,
+	timeout: config.api.timeout,
+	headers: {
+		"X-App-Source": defaultRequestHeaders["X-App-Source"],
+	},
 });
 
 const feedlyService = {
-  getTrendingVulnerabilities: ({
-    token,
-    count,
-  }: GetTrendingVulnerabilitiesPayload): Promise<GetTrendingVulnerabilitiesResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/trends/vulns", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            count: Math.min(count, MAX_ENTRIES),
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getTrendingNewMalwares: (
-    token: string
-  ): Promise<GetTrendingNewMalwareResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/trends/new-malwares", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getTrendingAttackers: (
-    token: string
-  ): Promise<GetTrendingAttackerResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/trends/attackers", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getTopStories: (token: string): Promise<GetTopStoriesResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/trends/stories", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getArticlesByStreamID: ({
-    token,
-    stream_id,
-  }: GetArticlesByStreamIDPayload): Promise<GetArticlesByStreamIDResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/articles", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            stream_id,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getTTPs: ({ token, type }: GetTTPsPayload): Promise<GetTTPsResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/ttps", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            type,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getThreatTrends: ({
-    token,
-    resource_id,
-  }: GetThreatInfoPayload): Promise<GetThreatTrendsResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/threat/trends", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            resource_id,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getThreatEntity: ({
-    token,
-    resource_id,
-  }: GetThreatInfoPayload): Promise<GetThreatEntityResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/threat/entity", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            resource_id,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getThreatRelationships: ({
-    token,
-    resource_id,
-  }: GetThreatInfoPayload): Promise<GetThreatRelationshipsResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/threat/relationships", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            resource_id,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getThreatArticleCountGraphs: ({
-    token,
-    resource_id,
-  }: GetThreatInfoPayload): Promise<GetThreatArticleCountGraphsResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/threat/article-count-graphs", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            resource_id,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getThreatExploitedVulnerabilities: ({
-    token,
-    entity_ids,
-  }: GetThreatExploitedVulnerabilitiesPayload): Promise<GetThreatExploitedVulnerabilitiesResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .post(
-          "/threat/vulns",
-          { entity_ids },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getCVEEvents: ({
-    token,
-    cve_id,
-  }: GetCVEEventsPayload): Promise<GetCVEEventsResponse> => {
-    return new Promise((resolve, reject) => {
-      request
-        .get("/cve/events", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            cve_id,
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getFeedData: ({ token }) => {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(config.feedly.url, {
-          headers: {
-            Authorization: `Bearer ${config.feedly.accessToken}`,
-            Accept: "application/json",
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
-  getVulnerabilityData: ({ token, param }) => {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(config.vulnerabilities.url, param, {
-          headers: {
-            Authorization: `Bearer ${config.vulnerabilities.accessToken}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
-        .then(({ data }) => {
-          resolve(data);
-        })
-        .catch((err) => {
-          reject(err?.response?.data?.errors || []);
-        });
-    });
-  },
+	getTrendingVulnerabilities: ({
+		token,
+		count,
+	}: GetTrendingVulnerabilitiesPayload): Promise<GetTrendingVulnerabilitiesResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/trends/vulns", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						count: Math.min(count, MAX_ENTRIES),
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getTrendingNewMalwares: (
+		token: string
+	): Promise<GetTrendingNewMalwareResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/trends/new-malwares", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getTrendingAttackers: (
+		token: string
+	): Promise<GetTrendingAttackerResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/trends/attackers", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getTopStories: (token: string): Promise<GetTopStoriesResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/trends/stories", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getArticlesByStreamID: ({
+		token,
+		stream_id,
+	}: GetArticlesByStreamIDPayload): Promise<GetArticlesByStreamIDResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/articles", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						stream_id,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getTTPs: ({ token, type }: GetTTPsPayload): Promise<GetTTPsResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/ttps", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						type,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getThreatTrends: ({
+		token,
+		resource_id,
+	}: GetThreatInfoPayload): Promise<GetThreatTrendsResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/threat/trends", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						resource_id,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getThreatEntity: ({
+		token,
+		resource_id,
+	}: GetThreatInfoPayload): Promise<GetThreatEntityResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/threat/entity", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						resource_id,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getThreatRelationships: ({
+		token,
+		resource_id,
+	}: GetThreatInfoPayload): Promise<GetThreatRelationshipsResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/threat/relationships", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						resource_id,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getThreatArticleCountGraphs: ({
+		token,
+		resource_id,
+	}: GetThreatInfoPayload): Promise<GetThreatArticleCountGraphsResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/threat/article-count-graphs", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						resource_id,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getThreatExploitedVulnerabilities: ({
+		token,
+		entity_ids,
+	}: GetThreatExploitedVulnerabilitiesPayload): Promise<GetThreatExploitedVulnerabilitiesResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.post(
+					"/threat/vulns",
+					{ entity_ids },
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getCVEEvents: ({
+		token,
+		cve_id,
+	}: GetCVEEventsPayload): Promise<GetCVEEventsResponse> => {
+		return new Promise((resolve, reject) => {
+			request
+				.get("/cve/events", {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					params: {
+						cve_id,
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getFeedData: ({ token }) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.get(config.feedly.url, {
+					headers: {
+						Authorization: `Bearer ${config.feedly.accessToken}`,
+						Accept: "application/json",
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getVulnerabilityData: ({ token, param }) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.post(config.vulnerabilities.url, param, {
+					headers: {
+						Authorization: `Bearer ${config.vulnerabilities.accessToken}`,
+						Accept: "application/json",
+						"Content-Type": "application/json",
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
+	getArticleDataByCVEID: ({ cve_id, param }) => {
+		return new Promise((resolve, reject) => {
+			axios
+				.get("https://api.feedly.com/v3/entities/CVE-2024-50623", {
+					headers: {
+						Authorization:
+							"Bearer A2Av4qirIy7AL4yjLZixigTcROYxhcGXOXYXGoZEFhS7ZN2oLRmtKBExlKpQNkt66P5Rlf9aW3uB0sk9kisJREWglVDqdCbeHefKbgTPb0sVGZsH3z_UtidBaKMtFEtF2cMJQNbbxmRfMBXNlLvCgo8rwbEyUFiqeVINehG_c_6y5nXaWMHfJ4STPPG7U45eZMq5-ar-M4PBbA8ZBGHvmIPq3Ku8wf8SNR_cAfZSH2s9JNF6zmWYNdbNMMgOGZXPNH-40HrPan3pbBK47oeN:feedly",
+						Accept: "*/*",
+						"Content-Type": "application/json",
+					},
+					params: {
+						withStats: true,
+						ck: 1733976442784,
+						ct: "feedly.desktop",
+						cv: "31.0.2499",
+					},
+				})
+				.then(({ data }) => {
+					resolve(data);
+				})
+				.catch((err) => {
+					reject(err?.response?.data?.errors || []);
+				});
+		});
+	},
 };
 
 export { feedlyService };

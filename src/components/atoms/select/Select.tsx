@@ -8,31 +8,31 @@ import { SelectProps } from "./Select.types";
 import { useStyles } from "./Select.styles";
 
 const Select = ({
-  className,
-  value,
-  onChange,
-  readOnly,
-  ...props
+	className,
+	value,
+	onChange,
+	readOnly,
+	...props
 }: SelectProps) => {
-  const styles = useStyles();
+	const styles = useStyles();
 
-  return (
-    <AntSelect
-      className={cx({
-        [styles.root]: true,
-        [styles.selectReadOnly]: readOnly,
-        [className || ""]: className,
-      })}
-      popupClassName={styles.popup}
-      value={value}
-      onChange={onChange}
-      {...props}
-    />
-  );
+	return (
+		<AntSelect
+			className={cx({
+				[styles.root]: true,
+				[styles.selectReadOnly]: readOnly,
+				[className || ""]: className,
+			})}
+			popupClassName={styles.popup}
+			value={value}
+			onChange={onChange}
+			{...props}
+		/>
+	);
 };
 
 const CompoundElements = Object.assign(Select, {
-  Option: AntSelect.Option,
+	Option: AntSelect.Option,
 });
 
 export { CompoundElements as Select };
