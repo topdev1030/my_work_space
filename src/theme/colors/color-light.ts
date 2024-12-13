@@ -1,7 +1,7 @@
 import type { Theme } from "../types";
 
-const colors: Theme["colors"] = {
-	colorPrimaryBg: "#1C1C1C",
+const darkColors: Theme["colors"] = {
+	colorPrimaryBg: "#F3F3F3",
 	colorPrimaryBgHover: "#112545",
 	colorPrimaryBorder: "#15325b",
 	colorPrimaryBorderHover: "#15417e",
@@ -108,4 +108,4 @@ const colors: Theme["colors"] = {
 
 export type ColorName = keyof Theme["colors"];
 
-export { colors };
+export { darkColors };

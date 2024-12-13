@@ -1,5 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+import { ThemeProvider } from "react-jss";
+import { ConfigProvider } from "antd";
+
+// theme
+import { theme } from "@/theme";
+// redux
+import { useAppSelector } from "@/redux";
+import { toggleState } from "@/redux/toggleTheme";
+
 // pages
 import {
 	Home,
@@ -10,57 +19,84 @@ import {
 	AdminReports,
 	AdminUploads,
 	VendorMonitoring,
+	AdminMessages,
 } from "@/pages";
 
 // components
 import { BaseLayout, RouteGuard } from "@/components";
-
 // types
 import { USER_ROLE } from "@/types";
-import { AdminMessages } from "./pages/admin/messages";
+// configs
 import config from "./config";
+// styles
 import "./styles/layout.css";
 
+const darkThemeColors = theme.colors;
+const lightThemeColors = theme.darkColors;
+
 const App = () => {
+	const { isToggled } = useAppSelector(toggleState);
+
+	const theme = {
+		colors: isToggled ? darkThemeColors : lightThemeColors,
+	};
+
 	return (
-		<BrowserRouter>
-			<Routes>
-				{/* Home Page */}
-				<Route path="/" element={<Home />} />
-				{/* <Route path="/version" element={<div>{{config.api.mode}'v1'}</div>} /> */}
-				<Route
-					path="/version"
-					element={<div>{`${config.api.mode} -v1.3`}</div>}
-				/>
-
-				{/* Auth Pages */}
-				<Route element={<BaseLayout />}>
-					{/* Common */}
-					<Route path="/dashboard" element={<Dashboard />} />
-
-					{/* Admin */}
-					<Route element={<RouteGuard roles={[USER_ROLE.ADMIN]} />}>
-						<Route path="/admin/reports" element={<AdminReports />} />
-						<Route path="/admin/uploads" element={<AdminUploads />} />
-						<Route path="/admin/messages" element={<AdminMessages />} />
+		<ThemeProvider theme={theme}>
+			<ConfigProvider
+				theme={{
+					token: {
+						...theme.colors,
+						fontFamily: "Poppins-Regular",
+					},
+				}}
+			>
+				<BrowserRouter>
+					<Routes>
+						{/* Home Page */}
+						<Route path="/" element={<Home />} />
+						{/* <Route path="/version" element={<div>{{config.api.mode}'v1'}</div>} /> */}
 						<Route
-							path="/admin/vendor-monitoring"
-							element={<VendorMonitoring />}
+							path="/version"
+							element={<div>{`${config.api.mode} -v1.3`}</div>}
 						/>
-					</Route>
 
-					{/* Customer */}
-					<Route element={<RouteGuard roles={[USER_ROLE.CUSTOMER]} />}>
-						<Route path="/news" element={<News />} />
-						<Route path="/intel-hub/reports" element={<CustomerReports />} />
-						<Route path="/intel-hub/uploads" element={<CustomerUploads />} />
-					</Route>
-				</Route>
+						{/* Auth Pages */}
+						<Route element={<BaseLayout />}>
+							{/* Common */}
+							<Route path="/dashboard" element={<Dashboard />} />
 
-				{/* Not Found Pages */}
-				<Route path="*" element={<Navigate to="/" />} />
-			</Routes>
-		</BrowserRouter>
+							{/* Admin */}
+							<Route element={<RouteGuard roles={[USER_ROLE.ADMIN]} />}>
+								<Route path="/admin/reports" element={<AdminReports />} />
+								<Route path="/admin/uploads" element={<AdminUploads />} />
+								<Route path="/admin/messages" element={<AdminMessages />} />
+								<Route
+									path="/admin/vendor-monitoring"
+									element={<VendorMonitoring />}
+								/>
+							</Route>
+
+							{/* Customer */}
+							<Route element={<RouteGuard roles={[USER_ROLE.CUSTOMER]} />}>
+								<Route path="/news" element={<News />} />
+								<Route
+									path="/intel-hub/reports"
+									element={<CustomerReports />}
+								/>
+								<Route
+									path="/intel-hub/uploads"
+									element={<CustomerUploads />}
+								/>
+							</Route>
+						</Route>
+
+						{/* Not Found Pages */}
+						<Route path="*" element={<Navigate to="/" />} />
+					</Routes>
+				</BrowserRouter>
+			</ConfigProvider>
+		</ThemeProvider>
 	);
 };
 

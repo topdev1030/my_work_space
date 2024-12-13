@@ -121,7 +121,7 @@
   scrollbar-width: thin;
   scrollbar-color: #404e5e transparent;
 
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     width: 0.6rem;
 
     &-track {
@@ -135,5 +135,5 @@
         background-color: #424242;
       }
     }
-  }
+  } */
 }

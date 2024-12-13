@@ -29,7 +29,7 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				fontFamily: "poppins-medium",
 				color: theme.colors.colorText,
 				fontWeight: 400,
-				backgroundColor: "#1C1C1C",
+				backgroundColor: theme.colors.colorMainBgBlack,
 			},
 		},
 		"& .ant-pagination": {
@@ -37,7 +37,7 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				display: "none !important",
 			},
 			"& .ant-pagination-item": {
-				border: "1px solid #498dce",
+				border: `1px solid ${theme.colors.colorBgLightBlue}`,
 				borderRight: 0,
 				borderRadius: 0,
 				marginInlineEnd: 0,
