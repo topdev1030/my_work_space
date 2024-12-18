@@ -4,7 +4,7 @@ import { Theme } from "@/theme";
 const useStyles = createUseStyles((theme: Theme) => ({
 	headerStyle: {
 		textAlign: "center",
-		color: "#fff",
+		color: theme.colors.colorFontTitle,
 		height: 64,
 		paddingInline: 48,
 		lineHeight: "64px",
@@ -25,7 +25,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 		overflow: "hidden",
 		width: "100%",
 		maxWidth: "100%",
-		backgroundColor: "#1C1C1C",
+		backgroundColor: theme.colors.colorMainBg,
 	},
 }));
 

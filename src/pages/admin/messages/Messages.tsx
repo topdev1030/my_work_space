@@ -5,7 +5,6 @@ import {
 	Row,
 	Col,
 	message,
-	Select,
 	Divider,
 	Image,
 	Space,
@@ -19,7 +18,7 @@ import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 // components
 import {
 	Button,
-	Select as AtomSelect,
+	Select,
 	Input,
 	Modal,
 	Table,
@@ -28,6 +27,7 @@ import {
 	Typography,
 } from "@/components";
 import type { TableColumnType } from "@/components";
+import { NodataView } from "@/components/templates/card-view";
 
 // services
 import {
@@ -60,8 +60,13 @@ import { formLayout } from "./Messages.constants";
 // styles
 import { mgmtServices } from "@/services/Mgmt/MgmtServices";
 import { useStyles } from "./Messages.styles";
+import { useCardStyles } from "@/styles/table/cardView.styles";
+import { useModalStyles } from "@/styles/table/modal.styles";
+import { useFormStyles } from "@/styles/table/form.style";
+import { useDefaultStyles } from "@/styles/table/defaultPage.styles";
 import { useTableStyles } from "@/styles/table/table.styles";
 import dayjs from "dayjs";
+import clsx from "clsx";
 
 const { Title, Text } = Typography;
 
@@ -130,6 +135,10 @@ const AdminMessages: React.FC = () => {
 	const accessToken = useAppSelector(selectAccessToken);
 
 	const styles = useStyles();
+	const cardStyles = useCardStyles();
+	const modalStyle = useModalStyles();
+	const formStyle = useFormStyles();
+	const defaultStyle = useDefaultStyles();
 	const tableStyles = useTableStyles();
 
 	useEffect(() => {
@@ -466,7 +475,16 @@ const AdminMessages: React.FC = () => {
 			title: "Upload Date",
 			dataIndex: "created_at",
 			key: "created_at",
-			render: (value: string) => dayjs(value).format("MM/DD/YYYY"),
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdFirstCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					{dayjs(value).format("MM/DD/YYYY")}
+				</div>
+			),
 		},
 		{
 			title: "Customers",
@@ -480,6 +498,16 @@ const AdminMessages: React.FC = () => {
 					onChange={(e) => tableFilterCallback(e, "cust_id")}
 				/>
 			),
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					{value}
+				</div>
+			),
 		},
 		{
 			title: "Title",
@@ -490,6 +518,16 @@ const AdminMessages: React.FC = () => {
 					variant="input"
 					onChange={(e) => tableFilterCallback(e, "title")}
 				/>
+			),
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					{value}
+				</div>
 			),
 		},
 		{
@@ -502,6 +540,16 @@ const AdminMessages: React.FC = () => {
 					onChange={(e) => tableFilterCallback(e, "subject")}
 				/>
 			),
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					{value}
+				</div>
+			),
 		},
 		{
 			title: "Tags",
@@ -512,6 +560,16 @@ const AdminMessages: React.FC = () => {
 					variant="input"
 					onChange={(e) => tableFilterCallback(e, "tags")}
 				/>
+			),
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					{value}
+				</div>
 			),
 		},
 		{
@@ -524,14 +582,20 @@ const AdminMessages: React.FC = () => {
 					onChange={(e) => tableFilterCallback(e, "recommendations")}
 				/>
 			),
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					{value}
+				</div>
+			),
 		},
 		{
 			title: "Description",
 			dataIndex: "description",
-			render: (text) => {
-				if (text && text.length > 25) return `${text.slice(0, 25)}…`;
-				return text;
-			},
 			filterIcon: <FilterOutlined />,
 			filterDropdown: (
 				<FilterDropdown
@@ -539,13 +603,41 @@ const AdminMessages: React.FC = () => {
 					onChange={(e) => tableFilterCallback(e, "description")}
 				/>
 			),
+			render: (value, _, index: number) => {
+				if (value && value.length > 25)
+					return (
+						<div
+							className={clsx(
+								[tableStyles.tdCell],
+								index % 2 === 0
+									? tableStyles.tdStyleOdd
+									: tableStyles.tdStyleEven
+							)}
+						>{`${value.slice(0, 25)}…`}</div>
+					);
+				return (
+					<div
+						className={clsx(
+							[tableStyles.tdCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
+						{value}
+					</div>
+				);
+			},
 		},
 		{
 			width: 140,
 			title: "Action",
 			align: "center",
-			render: (_, messageData) => (
-				<div className={tableStyles.tdIconStyle}>
+			render: (_, messageData, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdLastCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
 					<div className={tableStyles.filePdfCol}>
 						<Popconfirm
 							title="Resend a message"
@@ -617,30 +709,30 @@ const AdminMessages: React.FC = () => {
 	};
 
 	return (
-		<div className={styles.root}>
-			<div className={styles.header}>
-				<Text className={styles.title}>Messages</Text>
+		<div className={defaultStyle.root}>
+			<div className={defaultStyle.header}>
+				<Text className={defaultStyle.title}>Messages</Text>
 				<Button
-					className={styles.createMessageBtn}
+					className={formStyle.filledBtn}
 					disabled={loadingMessages}
 					// onClick={() => sendMessageToAllUsers()}
 					onClick={() => setOpenCreateMessageModal(true)}
 				>
-					<Text className={styles.createBtn}>Send a Message</Text>
+					<Text>Send a Message</Text>
 				</Button>
 			</div>
-			<div className={styles.searchContainer}>
+			<div className={formStyle.formContainer}>
 				<Form form={form} onFinish={handleSearch}>
-					<Title className={styles.panelTitle}>Search Panel</Title>
-					<Row className={styles.searchOptionContainer} gutter={32}>
-						<Col className={styles.fieldContainer} flex={4}>
+					<Title className={formStyle.panelTitle}>Search Panel</Title>
+					<Row className="mt-2 mb-8" gutter={32}>
+						<Col className={formStyle.fieldContainer} flex={4}>
 							<Form.Item
 								name="cust_id"
 								style={{ width: "100%", marginBottom: 0 }}
 							>
-								<Title className={styles.fieldTitle}>Search</Title>
+								<Title className={formStyle.fieldTitle}>Search</Title>
 								<Input
-									className={styles.searchBar}
+									className={formStyle.inputBar}
 									size="large"
 									placeholder=" Enter customer or title"
 									prefix={<SearchOutlined />}
@@ -650,15 +742,14 @@ const AdminMessages: React.FC = () => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={3}>
+						<Col className={formStyle.fieldContainer} flex={3}>
 							<Form.Item
 								name="upload_date_time"
 								initialValue="Till Today"
 								style={{ width: "100%", marginBottom: 0 }}
 							>
-								<Title className={styles.fieldTitle}>Date</Title>
+								<Title className={formStyle.fieldTitle}>Date</Title>
 								<Select
-									className={styles.selectBar}
 									defaultValue="Till Today"
 									placeholder="Till Today"
 									options={date_options}
@@ -668,15 +759,14 @@ const AdminMessages: React.FC = () => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={3}>
+						<Col className={formStyle.fieldContainer} flex={3}>
 							<Form.Item
 								name="tag"
 								initialValue=""
 								style={{ width: "100%", marginBottom: 0 }}
 							>
-								<Title className={styles.fieldTitle}>Tags</Title>
+								<Title className={formStyle.fieldTitle}>Tags</Title>
 								<Select
-									className={styles.selectBar}
 									defaultValue="Select"
 									placeholder="Select"
 									options={tags}
@@ -684,49 +774,48 @@ const AdminMessages: React.FC = () => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={2}>
+						<Col className={formStyle.fieldContainer} flex={2}>
 							<Button
 								htmlType="submit"
-								className={styles.searchBtn}
+								className={clsx([formStyle.filledBtn], "w-full")}
 								disabled={loadingMessages}
 							>
-								<Text className={styles.createBtn}>Search</Text>
+								<Text>Search</Text>
 							</Button>
 						</Col>
-						<Col className={styles.fieldContainer} flex={2}>
+						<Col className={formStyle.fieldContainer} flex={2}>
 							<Button
 								onClick={resetClearForm}
-								className={styles.clearBtn}
+								className={clsx([formStyle.outlinedBtn], "w-full")}
 								disabled={loadingMessages}
 							>
-								<Text className={styles.createBtn}>Clear</Text>
+								<Text>Clear</Text>
 							</Button>
 						</Col>
 					</Row>
 				</Form>
-				<Row className={styles.OptionContainer} gutter={32}>
+				<Row className={tableStyles.OptionContainer} gutter={32}>
 					<Col flex={5}>
-						<Title className={styles.optionTitle}>
+						<Title className={tableStyles.optionTitle}>
 							List of Messages ({totalCountPerSearch})
 						</Title>
 					</Col>
 					<Col flex={1}>
 						<Row>
-							<Col className={styles.sortContainer} flex={4}>
-								<Title className={styles.sortTitle}>Sort:</Title>
+							<Col className={tableStyles.sortContainer} flex={4}>
+								<Title className={tableStyles.sortTitle}>Sort:</Title>
 								<Select
-									className={styles.sortBar}
+									className={tableStyles.sortBar}
 									defaultValue="Date"
 									placeholder="Date"
 									options={sort_message_options}
 									onChange={handleSortChange}
 								/>
 							</Col>
-							<Col className={styles.viewIconContainer} flex={1}>
+							<Col className={tableStyles.viewIconContainer} flex={1}>
 								<Image
 									width={35}
 									height={35}
-									className={styles.viewIcon}
 									src={isTableView ? viewIcon : viewCardIcon}
 									preview={false}
 									onClick={() => {
@@ -752,14 +841,9 @@ const AdminMessages: React.FC = () => {
 					timeout={300}
 				>
 					{isTableView ? (
-						<div className={styles.content}>
+						<div className={tableStyles.content}>
 							<Table
-								className={tableStyles.datatTble}
-								rowClassName={(record, index) =>
-									index % 2 === 0
-										? tableStyles.tdStyleOdd
-										: tableStyles.tdStyleEven
-								}
+								className={tableStyles.dataTable}
 								rowKey="upload_date_time"
 								bordered={false}
 								columns={columns}
@@ -784,157 +868,194 @@ const AdminMessages: React.FC = () => {
 							/>
 						</div>
 					) : (
-						<div className={styles.cardContent}>
-							<Row justify="start" gutter={[24, 24]}>
-								{currentData.map((item, index) => (
-									<Col xs={24} sm={16} md={12} lg={8} key={index}>
-										<Card
-											className={tableStyles.cardContainer}
-											style={{
-												backgroundColor:
-													index % 2 === 0 ? "#282828" : "transparent",
-											}}
-										>
-											<Row justify="space-between" align="middle">
-												<Col>
-													<Text className={tableStyles.subtitle}>
-														Upload Date
-													</Text>
-													<br />
-													<Text className={tableStyles.value}>
-														{dayjs(
-															new Date(item.created_at)
-																.toISOString()
-																.split("T")[0]
-														).format("MM/DD/YYYY")}
-													</Text>
-												</Col>
-												<Col>
-													<Space>
-														<Button
-															icon={
-																<Image
-																	preview={false}
-																	style={{ backgroundColor: "transparent" }}
-																	src={sendIcon}
+						<div className="mt-8 flex justify-center">
+							{currentData?.length > 0 ? (
+								<div>
+									<Row justify="start" gutter={[24, 24]}>
+										{currentData.map((item, index) => (
+											<Col xs={24} sm={16} md={12} lg={8} key={index}>
+												<Card
+													className={clsx(
+														[cardStyles.cardContainer],
+														[
+															index % 2 === 0
+																? cardStyles.cardBackgroundEven
+																: cardStyles.cardBackgroundOdd,
+														]
+													)}
+												>
+													<Row justify="space-between" align="middle">
+														<Col>
+															<Text className={cardStyles.subtitle}>
+																Upload Date
+															</Text>
+															<br />
+															<Text className={cardStyles.value}>
+																{dayjs(
+																	new Date(item.created_at)
+																		.toISOString()
+																		.split("T")[0]
+																).format("MM/DD/YYYY")}
+															</Text>
+														</Col>
+														<Col>
+															<Space>
+																<Popconfirm
+																	title="Resend a message"
+																	description="Are you sure to resend this message?"
+																	placement="topRight"
+																	okText="Yes"
+																	cancelText="No"
+																	onConfirm={() => onResend(item)}
+																>
+																	<Button
+																		icon={
+																			<Image
+																				preview={false}
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				src={sendIcon}
+																			/>
+																		}
+																		type="link"
+																		style={{ color: "#fff" }}
+																	/>
+																</Popconfirm>
+																<Divider
+																	style={{
+																		borderColor: "#667075",
+																		borderWidth: 2,
+																		marginInline: 0,
+																	}}
+																	type="vertical"
 																/>
-															}
-															type="link"
-															style={{ color: "#fff" }}
-														/>
-														<Divider
-															style={{
-																borderColor: "#667075",
-																borderWidth: 2,
-																marginInline: 0,
-															}}
-															type="vertical"
-														/>
-														<Button
-															icon={
-																<Image
-																	style={{ backgroundColor: "transparent" }}
-																	preview={false}
-																	src={deleteIcon}
-																/>
-															}
-															type="link"
-															danger
-														/>
-													</Space>
-												</Col>
-											</Row>
-											<Divider
-												style={{
-													borderColor: index % 2 === 0 ? "#000" : "#282828",
-												}}
-											/>
-											<Row gutter={[16, 16]} style={{ rowGap: 10 }}>
-												<Col xs={24} sm={24}>
-													<Space
-														direction="vertical"
-														className={tableStyles.card_text_space}
-													>
-														<Text className={tableStyles.subtitle}>
-															Customers
-														</Text>
-														<Text className={tableStyles.value}>
-															{item.cust_id}
-														</Text>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={tableStyles.card_text_space}
-													>
-														<Text className={tableStyles.subtitle}>Title</Text>
-														<p className={tableStyles.value}>{item.title}</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={tableStyles.card_text_space}
-													>
-														<Text className={tableStyles.subtitle}>
-															Subject
-														</Text>
-														<p className={tableStyles.value}>{item.subject}</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={tableStyles.card_text_space}
-													>
-														<Text className={tableStyles.subtitle}>Tags</Text>
-														<p className={tableStyles.value}>{item.tags}</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={tableStyles.card_text_space}
-													>
-														<Text className={tableStyles.subtitle}>
-															Recommendations
-														</Text>
-														<p className={tableStyles.value}>
-															{item.recommendations}
-														</p>
-													</Space>
-												</Col>
-												<Col xs={12} sm={12}>
-													<Space
-														direction="vertical"
-														className={tableStyles.card_text_space}
-													>
-														<Text className={tableStyles.subtitle}>
-															Description
-														</Text>
-														<p className={tableStyles.value}>
-															{item.description}
-														</p>
-													</Space>
-												</Col>
-											</Row>
-										</Card>
-									</Col>
-								))}
-							</Row>
+																<Popconfirm
+																	title="Delete a message"
+																	description="Are you sure to delete this message?"
+																	placement="topRight"
+																	okText="Yes"
+																	cancelText="No"
+																	onConfirm={() => onDelete(item)}
+																>
+																	<Button
+																		icon={
+																			<Image
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				preview={false}
+																				src={deleteIcon}
+																			/>
+																		}
+																		type="link"
+																		danger
+																	/>
+																</Popconfirm>
+															</Space>
+														</Col>
+													</Row>
+													<Divider
+														style={{
+															borderColor: index % 2 === 0 ? "#000" : "#282828",
+														}}
+													/>
+													<Row gutter={[16, 16]} style={{ rowGap: 10 }}>
+														<Col xs={24} sm={24}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Customers
+																</Text>
+																<Text className={cardStyles.value}>
+																	{item.cust_id}
+																</Text>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Title
+																</Text>
+																<p className={cardStyles.value}>{item.title}</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Subject
+																</Text>
+																<p className={cardStyles.value}>
+																	{item.subject}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Tags
+																</Text>
+																<p className={cardStyles.value}>{item.tags}</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Recommendations
+																</Text>
+																<p className={cardStyles.value}>
+																	{item.recommendations}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={12} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Description
+																</Text>
+																<p className={cardStyles.value}>
+																	{item.description}
+																</p>
+															</Space>
+														</Col>
+													</Row>
+												</Card>
+											</Col>
+										))}
+									</Row>
 
-							<div className={tableStyles.cardPagination}>
-								<CardPagination
-									current={currentPage}
-									pageSize={pageSize}
-									showSizeChanger={false}
-									total={dataSource.length}
-									onChange={handlePageChange}
-									itemRender={itemRender}
-									responsive
-								/>
-							</div>
+									<div className={cardStyles.cardPagination}>
+										<CardPagination
+											current={currentPage}
+											pageSize={pageSize}
+											showSizeChanger={false}
+											total={dataSource.length}
+											onChange={handlePageChange}
+											itemRender={itemRender}
+											responsive
+										/>
+									</div>
+								</div>
+							) : (
+								<NodataView />
+							)}
 						</div>
 					)}
 				</CSSTransition>
@@ -942,7 +1063,7 @@ const AdminMessages: React.FC = () => {
 
 			{/* send messgae modal */}
 			<Modal
-				className={tableStyles.createModal}
+				className={modalStyle.createModal}
 				open={openCreateMessageModal}
 				onCancel={onCloseCreateMessageModal}
 				footer={null}
@@ -950,13 +1071,13 @@ const AdminMessages: React.FC = () => {
 			>
 				<Form
 					{...formLayout}
-					className={tableStyles.createForm}
+					className={modalStyle.createForm}
 					form={form}
 					name="create-message"
 					requiredMark={false}
 					onFinish={onSubmitAlert}
 				>
-					<Title className={tableStyles.formTitle}>Send a Message</Title>
+					<Title className={modalStyle.formTitle}>Send a Message</Title>
 					<Row gutter={30}>
 						<Col sm={24}>
 							<Form.Item
@@ -972,8 +1093,6 @@ const AdminMessages: React.FC = () => {
 									options={customerTypeOptions}
 									defaultValue={customerTypeOptions[0]}
 									placeholder="Select"
-									showSearch
-									allowClear
 								/>
 							</Form.Item>
 						</Col>
@@ -1048,7 +1167,8 @@ const AdminMessages: React.FC = () => {
 							>
 								<Input
 									variant="textarea"
-									style={{ minHeight: 80, backgroundColor: "#282937" }}
+									style={{ minHeight: 80 }}
+									className={formStyle.formTextarea}
 									placeholder="Type In"
 								/>
 							</Form.Item>
@@ -1069,22 +1189,27 @@ const AdminMessages: React.FC = () => {
 							>
 								<Input
 									variant="textarea"
-									style={{ minHeight: 80, backgroundColor: "#282937" }}
+									style={{ minHeight: 80 }}
+									className={formStyle.formTextarea}
 									placeholder="Type In"
 								/>
 							</Form.Item>
 						</Col>
 					</Row>
-					<div className={tableStyles.formActions}>
+					<div className={modalStyle.formActions}>
 						<Button
 							htmlType="button"
-							className={styles.clearBtn}
-							onClick={onResetCreateMessageForm}
+							className={clsx([formStyle.outlinedBtn], "w-full")}
+							onClick={onCloseCreateMessageModal}
 						>
 							Cancel
 						</Button>
-						<Button type="primary" htmlType="submit" loading={creatingMessage}>
-							Submit
+						<Button
+							className={clsx([formStyle.filledBtn], "w-full")}
+							htmlType="submit"
+							loading={creatingMessage}
+						>
+							<span className={formStyle.filledBtnText}>Submit</span>
 						</Button>
 					</div>
 				</Form>

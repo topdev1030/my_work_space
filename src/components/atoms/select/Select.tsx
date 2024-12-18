@@ -9,6 +9,7 @@ import { useStyles } from "./Select.styles";
 
 const Select = ({
 	className,
+	popupClassName,
 	value,
 	onChange,
 	readOnly,
@@ -23,7 +24,10 @@ const Select = ({
 				[styles.selectReadOnly]: readOnly,
 				[className || ""]: className,
 			})}
-			popupClassName={styles.popup}
+			popupClassName={cx({
+				[styles.popup]: true,
+				[popupClassName || ""]: popupClassName,
+			})}
 			value={value}
 			onChange={onChange}
 			{...props}

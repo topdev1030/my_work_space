@@ -9,11 +9,17 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 // redux
 import { useAppDispatch, useAppSelector } from "@/redux";
-import { selectAuth, setAccessToken, getUserInfo } from "@/redux/auth";
-import { toggle } from "@/redux/toggleTheme";
+import {
+	selectAuth,
+	setAccessToken,
+	getUserInfo,
+	selectUserRole,
+} from "@/redux/auth";
+import { toggle, toggleState } from "@/redux/toggleTheme";
 
 // assets
-import ImgLogo from "@/static/images/logo.png";
+import ImgLogoLight from "@/static/images/logo.svg";
+import ImgLogoDark from "@/static/images/logo.png";
 import { useStyles } from "./Sidebar.styles";
 
 // Icons
@@ -24,6 +30,7 @@ import reportIcon from "../../../static/images/reports.png";
 import logoutIcon from "../../../static/images/logout.png";
 import settingIcon from "../../../static/images/setting.svg";
 import vendorMornitoringIcon from "../../../static/images/vendor-monitoring.svg";
+import newsFeedIcon from "../../../static/images/newsFeed.svg";
 
 // Components
 import { Typography } from "@/components/atoms";
@@ -41,6 +48,8 @@ const SideBar = () => {
 	const navigate = useNavigate();
 	const { logout } = useAuth0();
 	const { accessToken } = useAppSelector(selectAuth);
+	const { isToggled } = useAppSelector(toggleState);
+	const userRole = useAppSelector(selectUserRole);
 
 	const styles = useStyles();
 	const location = useLocation();
@@ -50,7 +59,7 @@ const SideBar = () => {
 		dispatch(toggle());
 	};
 
-	const items: MenuItem[] = [
+	const adminItems: MenuItem[] = [
 		{
 			key: "/dashboard",
 			label: <Link to="/dashboard">Dashboard</Link>,
@@ -82,6 +91,34 @@ const SideBar = () => {
 					src={vendorMornitoringIcon}
 				/>
 			),
+		},
+		{
+			key: "/admin/news",
+			label: <Link to="/admin/news">News Feed</Link>,
+			icon: <Image width={30} height={30} preview={false} src={newsFeedIcon} />,
+		},
+	];
+
+	const customerItems: MenuItem[] = [
+		{
+			key: "/dashboard",
+			label: <Link to="/dashboard">Dashboard</Link>,
+			icon: <Image width={30} height={30} preview={false} src={Dashboard} />,
+		},
+		{
+			key: "/reports",
+			label: <Link to="/reports">Reports</Link>,
+			icon: <Image width={35} height={35} preview={false} src={reportIcon} />,
+		},
+		{
+			key: "/uploads",
+			label: <Link to="/uploads">Uploads</Link>,
+			icon: <Image width={35} height={35} preview={false} src={uploadIcon} />,
+		},
+		{
+			key: "/news",
+			label: <Link to="/news">News Feed</Link>,
+			icon: <Image width={30} height={30} preview={false} src={newsFeedIcon} />,
 		},
 	];
 
@@ -146,7 +183,11 @@ const SideBar = () => {
 					className={styles.logoContainer}
 					onClick={() => navigate("/dashboard")}
 				>
-					<img className={styles.logoImg} src={ImgLogo} alt="logo" />
+					<img
+						className={styles.logoImg}
+						src={isToggled ? ImgLogoDark : ImgLogoLight}
+						alt="logo"
+					/>
 					<Text className={styles.logoTitle}>Threat Intelligence</Text>
 				</div>
 				<div className={styles.profileCardContainer}>
@@ -167,7 +208,7 @@ const SideBar = () => {
 					openKeys={[location.pathname]}
 					selectedKeys={[location.pathname]}
 					mode="inline"
-					items={items}
+					items={userRole === "admin" ? adminItems : customerItems}
 				/>
 			</div>
 

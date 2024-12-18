@@ -1,17 +1,19 @@
 import React, { useState, useEffect, ReactNode, useRef } from "react";
-import { Popover, Image, Spin, Drawer } from "antd";
+import { Popover, Image, Spin, Descriptions } from "antd";
 import clsx from "clsx";
 // components
-import { Button, Table, Tag } from "@/components";
+import { Table, Tag, Drawer } from "@/components";
 import { ThreadDrawer } from "../thread-vulnerable-drawer/ThreadDrawer";
-import { useStyles } from "../../admin/messages/Messages.styles";
 // helpers
 import { convertESTDateFormat, interpolateColor } from "@/helpers";
 // styles
 import { tableStyles } from "./table.styles";
+import { useTableStyles } from "@/styles/table/table.styles";
 // types
 import type { TableColumnType } from "@/components";
 import { Vulnerability } from "./table.types";
+// icons
+import closeIcon from "../../../static/images/closeIcon.svg";
 
 interface dataProps {
 	tableData: Vulnerability[];
@@ -33,8 +35,8 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 	const onCloseDrawer = () => {
 		setOpenThreadDrawer(false);
 	};
-	const styles = useStyles();
-	const tableStyle = tableStyles();
+	const styles = tableStyles();
+	const tableStyle = useTableStyles();
 
 	const filterData = (sourceData: any) => {
 		const array: Vulnerability[] = [];
@@ -142,24 +144,45 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 		{
 			title: "Published",
 			dataIndex: "published",
-			width: 100,
-			render: (value: string) => convertESTDateFormat(value),
+			width: 120,
+			render: (value: string, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyle.tdFirstCell, styles.tdSize],
+						index % 2 === 0 ? tableStyle.tdStyleOdd : tableStyle.tdStyleEven
+					)}
+				>
+					{convertESTDateFormat(value)}
+				</div>
+			),
 		},
 		{
-			width: 300,
+			width: 250,
 			title: "CVE ID",
 			dataIndex: "cve_id",
 			key: "created_at",
 			render: (value: string, record, index: number) => {
 				return (
-					<>
+					<div
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
+						)}
+					>
 						<h3 onClick={() => showDrawer(value)} className="cursor-point">
 							{value}
 						</h3>
 						<p className="text-ellipsis max-w-250 text-gray-500 mb-0">
 							{dataSource[index].description}
+							{/* {sampleData[index].description} */}
 						</p>
-					</>
+					</div>
 				);
 			},
 		},
@@ -167,7 +190,7 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 			title: "Vendor",
 			dataIndex: "vendor",
 			width: 100,
-			render: (value) => {
+			render: (value, _, index: number) => {
 				const array: any[] = value?.array ? value?.array?.slice(1) : [];
 				const options: ReactNode[] = array.map(
 					(item: string, index: number) => <p key={index}>{item}</p>
@@ -177,176 +200,266 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 				return value?.array?.length !== 0 ? (
 					<div
 						className={clsx(
-							value?.array?.length < 2
-								? "justify-center"
-								: "items-center flex-column",
-							"flex"
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
 						)}
 					>
-						<p className="flex mb-0">
-							<p
-								className="text-ellipsis mb-0"
-								style={{
-									WebkitBoxOrient: "vertical",
-									maxWidth: 85,
-									WebkitLineClamp: 1,
-								}}
-							>
-								{value?.array ? value?.array[0] : ""}
-							</p>
-							{!value.status ? (
-								<Tag
-									className={clsx([
-										[tableStyle.tagStyle, tableStyle.innerTagStyle],
-										"font-poppines ml-1",
-									])}
+						<div
+							className={clsx(
+								value?.array?.length < 2
+									? "justify-center"
+									: "items-center flex-column",
+								"flex"
+							)}
+						>
+							<p className="flex mb-0">
+								<p
+									className="text-ellipsis mb-0"
+									style={{
+										WebkitBoxOrient: "vertical",
+										maxWidth: 85,
+										WebkitLineClamp: 1,
+									}}
 								>
-									AI
-								</Tag>
+									{value?.array ? value?.array[0] : ""}
+								</p>
+								{!value.status ? (
+									<Tag
+										className={clsx([
+											[styles.tagStyle, styles.innerTagStyle],
+											"font-poppines ml-1",
+										])}
+									>
+										AI
+									</Tag>
+								) : (
+									""
+								)}
+							</p>
+							{value?.array?.length > 1 ? (
+								<Popover
+									content={content}
+									trigger="click"
+									className="cursor-point"
+								>
+									<span>
+										+
+										{value?.array && value?.array?.length > 0
+											? (value?.array?.length || 0) - 1
+											: 0}
+									</span>
+									<span> more</span>
+								</Popover>
 							) : (
 								""
 							)}
-						</p>
-						{value?.array?.length > 1 ? (
-							<Popover
-								content={content}
-								trigger="click"
-								className="cursor-point"
-							>
-								<span>
-									+
-									{value?.array && value?.array?.length > 0
-										? (value?.array?.length || 0) - 1
-										: 0}
-								</span>
-								<span> more</span>
-							</Popover>
-						) : (
-							""
-						)}
+						</div>
 					</div>
 				) : (
-					<div className="flex justify-center">-</div>
+					<div
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
+						)}
+					>
+						<div className="flex justify-center">-</div>
+					</div>
 				);
 			},
 		},
 		{
 			title: "Product",
 			dataIndex: "product",
-			width: 150,
-			render: (value: any) => {
+			width: 120,
+			render: (value: any, _, index: number) => {
 				const flatArray = value?.array?.flat(Infinity);
 
 				const newArray: any[] = flatArray?.slice(1);
 				const options: ReactNode[] = newArray?.map(
-					(item: any, index: number) => <p key={index}>{item.name}</p>
+					(item: any, index: number) => <p key={index}>{item?.name}</p>
 				);
 				const content = <div>{options}</div>;
 
 				return flatArray ? (
 					<div
 						className={clsx(
-							flatArray?.length < 2
-								? "justify-center"
-								: "items-center flex-column",
-							"flex"
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
 						)}
 					>
-						<p className="flex mb-0">
-							<p
-								className="text-ellipsis mb-0"
-								style={{
-									WebkitBoxOrient: "vertical",
-									maxWidth: 85,
-									WebkitLineClamp: 1,
-								}}
-							>
-								{flatArray && Array.isArray(flatArray) ? flatArray[0].name : ""}
-							</p>
-							{!value.status ? (
-								<Tag
-									className={clsx([
-										[tableStyle.tagStyle, tableStyle.innerTagStyle],
-										"font-poppines ml-1",
-									])}
+						<div
+							className={clsx(
+								flatArray?.length < 2
+									? "justify-center"
+									: "items-center flex-column",
+								"flex"
+							)}
+						>
+							<p className="flex mb-0">
+								<p
+									className="text-ellipsis mb-0"
+									style={{
+										WebkitBoxOrient: "vertical",
+										maxWidth: 85,
+										WebkitLineClamp: 1,
+									}}
 								>
-									AI
-								</Tag>
+									{flatArray && Array.isArray(flatArray)
+										? flatArray[0]?.name
+										: ""}
+								</p>
+								{!value.status ? (
+									<Tag
+										className={clsx([
+											[styles.tagStyle, styles.innerTagStyle],
+											"font-poppines ml-1",
+										])}
+									>
+										AI
+									</Tag>
+								) : (
+									""
+								)}
+							</p>
+							{flatArray.length > 1 ? (
+								<Popover
+									content={content}
+									trigger="click"
+									className="cursor-point"
+								>
+									<span>
+										+
+										{flatArray && flatArray.length > 0
+											? flatArray.length - 1
+											: 0}
+									</span>
+									<span> more</span>
+								</Popover>
 							) : (
 								""
 							)}
-						</p>
-						{flatArray.length > 1 ? (
-							<Popover
-								content={content}
-								trigger="click"
-								className="cursor-point"
-							>
-								<span>
-									+
-									{flatArray && flatArray.length > 0 ? flatArray.length - 1 : 0}
-								</span>
-								<span> more</span>
-							</Popover>
-						) : (
-							""
-						)}
+						</div>
 					</div>
 				) : (
-					<div className="flex justify-center">-</div>
+					<div
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
+						)}
+					>
+						<div className="flex justify-center">-</div>
+					</div>
 				);
 			},
 		},
 		{
 			title: "CVSS Score",
 			dataIndex: "cvss_score",
-			width: 170,
-			render: (value: number) => {
+			width: 150,
+			render: (value: number, _, index: number) => {
 				return value ? (
-					<Tag
-						className={clsx([tableStyle.tagStyle], "font-poppines")}
-						style={{
-							color: interpolateColor(value),
-							borderColor: interpolateColor(value),
-						}}
-					>
-						CVSS {value}
-					</Tag>
-				) : (
-					<Tag
+					<div
 						className={clsx(
-							[tableStyle.tagStyle, tableStyle.noColor],
-							"font-poppines"
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
 						)}
 					>
-						-
-					</Tag>
+						<Tag
+							className={clsx([styles.tagStyle], "font-poppines")}
+							style={{
+								color: interpolateColor(value),
+								borderColor: interpolateColor(value),
+							}}
+						>
+							CVSS {value}
+						</Tag>
+					</div>
+				) : (
+					<div
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column"
+						)}
+					>
+						<Tag
+							className={clsx(
+								[styles.tagStyle, styles.noColor],
+								"font-poppines"
+							)}
+						>
+							-
+						</Tag>
+					</div>
 				);
 			},
 		},
 		{
 			title: "CVSS Estimate",
 			dataIndex: "cvss_estimate",
-			width: 200,
-			render: (value: string) => {
+			width: 170,
+			render: (value: string, _, index: number) => {
 				let colorValue = "";
 				switch (value) {
 					case "HIGH":
-						colorValue = tableStyle.highColor;
+						colorValue = styles.highColor;
 						break;
 					case "MEDIUM":
-						colorValue = tableStyle.mediumColor;
+						colorValue = styles.mediumColor;
 						break;
 					default:
-						colorValue = tableStyle.noColor;
+						colorValue = styles.noColor;
 						break;
 				}
 				return (
-					<Tag
-						className={clsx([tableStyle.tagStyle, colorValue], "font-poppines")}
+					<div
+						className={clsx([
+							tableStyle.tdCell,
+							styles.tdSize,
+							index % 2 === 0 ? tableStyle.tdStyleOdd : tableStyle.tdStyleEven,
+						])}
 					>
-						{value ? value : <div>-</div>}
-					</Tag>
+						<Tag
+							className={clsx([styles.tagStyle, colorValue], "font-poppines")}
+						>
+							{value ? value : <div>-</div>}
+						</Tag>
+					</div>
 				);
 			},
 		},
@@ -355,8 +468,17 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 			dataIndex: "epss_score",
 			width: 90,
 
-			render: (value: string) => (
-				<div className="flex justify-center">
+			render: (value: any, _, index: number) => (
+				<div
+					className={clsx(
+						[
+							tableStyle.tdCell,
+							styles.tdSize,
+							index % 2 === 0 ? tableStyle.tdStyleOdd : tableStyle.tdStyleEven,
+						],
+						"flex justify-center"
+					)}
+				>
 					{value ? `${(Number(value) * 100).toFixed(2)}%` : "-"}
 				</div>
 			),
@@ -366,55 +488,101 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 			dataIndex: "trend",
 			width: 200,
 
-			render: (value) => {
+			render: (value: any, _, index: number) => {
 				return value ? (
 					<div
-						style={{
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-						}}
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex flex-column "
+						)}
 					>
 						<Image src={value.graphURL} preview={false} height={42} />
 						<span
-							className="flex justify-center text-xs mt-2"
+							className="flex text-xs mt-2 mr-auto ml-auto"
 							style={{ color: "#498DCE" }}
 						>
 							{value.articleCount !== 0 ? value.articleCount : "No"} Articles
 						</span>
 					</div>
 				) : (
-					<div className="flex justify-center">-</div>
+					<div
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex justify-center"
+						)}
+					>
+						-
+					</div>
 				);
 			},
 		},
 		{
 			title: "Patched",
 			dataIndex: "patched",
-			width: 100,
-			render: (value: any) => {
+			width: 120,
+			render: (value: any, _, index: number) => {
 				return value === undefined ? (
-					<div className="flex justify-center">-</div>
+					<div
+						className={clsx(
+							[
+								tableStyle.tdCell,
+								styles.tdSize,
+								index % 2 === 0
+									? tableStyle.tdStyleOdd
+									: tableStyle.tdStyleEven,
+							],
+							"flex justify-center"
+						)}
+					>
+						-
+					</div>
 				) : (
-					convertESTDateFormat(value[0])
+					<div
+						className={clsx([
+							tableStyle.tdCell,
+							styles.tdSize,
+							index % 2 === 0 ? tableStyle.tdStyleOdd : tableStyle.tdStyleEven,
+						])}
+					>
+						{convertESTDateFormat(value[0])}
+					</div>
 				);
 			},
 		},
 		{
 			title: "Exploit",
 			dataIndex: "exploit",
-			width: 100,
-			render: (value: number) => convertESTDateFormat(value),
+			width: 120,
+			render: (value: number, _, index: number) => (
+				<div
+					className={clsx([
+						tableStyle.tdLastCell,
+						styles.tdSize,
+						index % 2 === 0 ? tableStyle.tdStyleOdd : tableStyle.tdStyleEven,
+					])}
+				>
+					{convertESTDateFormat(value)}
+				</div>
+			),
 		},
 	];
 
 	return (
 		<div className="mt-4">
 			<Table
-				className={clsx([styles.messagesTable, tableStyle.tableContainer])}
-				rowClassName={(record, index) =>
-					index % 2 === 0 ? styles.tdStyleOdd : styles.tdStyleEven
-				}
+				className={clsx([tableStyle.dataTable, styles.tableContainer])}
 				rowKey="upload_date_time"
 				bordered={false}
 				columns={columns}
@@ -452,21 +620,17 @@ const SatisficTable: React.FC<dataProps> = ({ tableData, increaseCount }) => {
 			</Spin>
 
 			<Drawer
-				className={tableStyle.drawerRoot}
+				className={styles.drawerRoot}
 				size="large"
-				contentWrapperStyle={{ width: "70%" }}
+				title={null}
+				width="60%"
+				style={{ height: 740 }}
 				placement="right"
-				title={
-					<div className="flex justify-end">
-						<Button className={clsx([tableStyle.button], "text-end")}>
-							Export as PDF
-						</Button>
-					</div>
-				}
 				open={openThreadDrawer}
 				onClose={onCloseDrawer}
+				contentWrapperStyle={{ boxShadow: "none" }}
 			>
-				<div className={tableStyle.entryContainer}>
+				<div className={styles.entryContainer}>
 					<ThreadDrawer cve_id={cveID} />
 				</div>
 			</Drawer>

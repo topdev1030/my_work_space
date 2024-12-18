@@ -427,6 +427,19 @@ export type FeedlyCVE = {
 		privilegesRequired: string;
 		vectorString?: string;
 	};
+	cvssV4: {
+		integrityImpact: string;
+		version: string;
+		availabilityImpact: string;
+		scope: string;
+		attackVector: string;
+		userInteraction: string;
+		baseScore: number;
+		attackComplexity: string;
+		confidentialityImpact: string;
+		privilegesRequired: string;
+		vectorString?: string;
+	};
 	cvssV2?: {
 		integrityImpact: string;
 		version: string;

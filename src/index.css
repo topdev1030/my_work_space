@@ -118,21 +118,21 @@
 }
 
 *:not(html):not(body) {
-  scrollbar-width: thin;
-  scrollbar-color: #404e5e transparent;
+  /* scrollbar-width: thin;
+  scrollbar-color: #498DCE transparent; */
 
   /* &::-webkit-scrollbar {
-    width: 0.6rem;
+    width: 0.5rem;
 
     &-track {
-      border-radius: 1.6rem;
+      border-radius: 10px;
     }
     &-thumb {
-      border-radius: 1.6rem;
-      background-color: #404e5e;
+      border-radius: 10pxrem;
+      background-color: #498DCE;
 
       &:hover {
-        background-color: #424242;
+        background-color: #498DCE;
       }
     }
   } */

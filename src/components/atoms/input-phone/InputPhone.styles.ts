@@ -10,7 +10,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 		"&.form-control": {
 			height: 32,
 			paddingLeft: 52,
-			backgroundColor: theme.colors.colorMainBgBlack,
+			backgroundColor: theme.colors.colorMainBg,
 			border: `1px solid ${theme.colors.colorBorder}`,
 			borderRadius: 6,
 			color: theme.colors.colorText,

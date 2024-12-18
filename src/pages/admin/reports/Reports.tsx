@@ -1,42 +1,42 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import moment from "moment";
+import clsx from "clsx";
 
 import {
 	Row,
 	Col,
 	Image,
 	message,
-	Select,
 	Form,
-	Card,
 	Space,
 	Divider,
 	Pagination as CardPagination,
 	PaginationProps,
 } from "antd";
-import type { TablePaginationConfig } from "antd/es/table/interface";
-import type { UploadRequestOption } from "rc-upload/lib/interface";
 
 import { SearchOutlined } from "@ant-design/icons";
 
 import FileUploadIcon from "../../../static/images/file_upload.png";
 
 import debounce from "debounce";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 // components
 import {
 	Button,
 	Input,
+	Select,
 	Modal,
 	PdfViewerV2,
 	Table,
 	Upload,
+	Card,
 	FilterDropdown,
 	Popconfirm,
 	Typography,
 } from "@/components";
 import type { TableColumnType } from "@/components";
+import { NodataView } from "@/components/templates/card-view";
 
 // services
 import {
@@ -62,6 +62,8 @@ import {
 	SubsidiaryOption,
 	CreateReportFormValues,
 } from "./Reports.types";
+import type { TablePaginationConfig } from "antd/es/table/interface";
+import type { UploadRequestOption } from "rc-upload/lib/interface";
 
 // Import TransitionGroup for animation
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -75,6 +77,11 @@ import { useStyles } from "./Reports.styles";
 import axios from "axios";
 import config from "@/config";
 import { defaultRequestHeaders } from "@/constants";
+import { useCardStyles } from "@/styles/table/cardView.styles";
+import { useModalStyles } from "@/styles/table/modal.styles";
+import { useFormStyles } from "@/styles/table/form.style";
+import { useDefaultStyles } from "@/styles/table/defaultPage.styles";
+import { useTableStyles } from "@/styles/table/table.styles";
 
 // Icon Imports
 import viewIcon from "../../../static/images/view.png";
@@ -158,6 +165,11 @@ const AdminReports = () => {
 	const userInfo = useAppSelector(selectUserInfo);
 
 	const styles = useStyles();
+	const cardStyles = useCardStyles();
+	const modalStyle = useModalStyles();
+	const formStyle = useFormStyles();
+	const defaultStyle = useDefaultStyles();
+	const tableStyles = useTableStyles();
 
 	useEffect(() => {
 		setIsTableView(
@@ -634,9 +646,14 @@ const AdminReports = () => {
 			title: "Upload Date",
 			dataIndex: "upload_date_time",
 			width: 200,
-			render: (value) => {
+			render: (value, _, index: number) => {
 				return (
-					<div className={styles.tdFirstCell}>
+					<div
+						className={clsx(
+							[tableStyles.tdFirstCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
 						{dayjs(value).format("MM/DD/YYYY")}
 					</div>
 				);
@@ -651,9 +668,14 @@ const AdminReports = () => {
 					onChange={(e) => tableFilterCallback(e.target.value, "cust_id")}
 				/>
 			),
-			render: (value) => {
+			render: (value, _, index: number) => {
 				return (
-					<div>
+					<div
+						className={clsx(
+							[tableStyles.tdCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
 						{customerOptions.find((opt) => opt.cust_id === value)?.label}
 					</div>
 				);
@@ -668,9 +690,14 @@ const AdminReports = () => {
 					onChange={(e) => tableFilterCallback(e.target.value, "subsidiary_id")}
 				/>
 			),
-			render: (value) => {
+			render: (value, _, index: number) => {
 				return (
-					<div>
+					<div
+						className={clsx(
+							[tableStyles.tdCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
 						{subsidiariesOptions.find((opt) => opt.value === value)?.label}
 					</div>
 				);
@@ -686,8 +713,17 @@ const AdminReports = () => {
 					onChange={(e) => tableFilterCallback(e.target.value, "report_name")}
 				/>
 			),
-			render: (value) => {
-				return <div>{value}</div>;
+			render: (value, _, index: number) => {
+				return (
+					<div
+						className={clsx(
+							[tableStyles.tdCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
+						{value}
+					</div>
+				);
 			},
 		},
 		{
@@ -702,9 +738,14 @@ const AdminReports = () => {
 					onChange={(e) => tableFilterCallback(e, "report_type")}
 				/>
 			),
-			render: (value) => {
+			render: (value, _, index: number) => {
 				return (
-					<div>
+					<div
+						className={clsx(
+							[tableStyles.tdCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
 						{reportTypeOptions.find((opt) => opt.value === value)?.label}
 					</div>
 				);
@@ -722,8 +763,17 @@ const AdminReports = () => {
 					onChange={(e) => tableFilterCallback(e.target.value, "uploaded_by")}
 				/>
 			),
-			render: (value) => {
-				return <div>{value}</div>;
+			render: (value, _, index: number) => {
+				return (
+					<div
+						className={clsx(
+							[tableStyles.tdCell],
+							index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+						)}
+					>
+						{value}
+					</div>
+				);
 			},
 		},
 		{
@@ -731,8 +781,13 @@ const AdminReports = () => {
 			dataIndex: "url",
 			align: "center",
 			width: 240,
-			render: (value, record) => (
-				<div className={styles.tdIconStyle}>
+			render: (value, record, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdLastCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
 					<div className={styles.reportPdfCol}>
 						<Button
 							style={{ border: 0, backgroundColor: "transparent" }}
@@ -741,7 +796,7 @@ const AdminReports = () => {
 						/>
 						<Divider
 							style={{
-								borderColor: "#667075",
+								borderColor: "#8E8E8E",
 								borderWidth: 2,
 								marginInline: 0,
 							}}
@@ -812,29 +867,29 @@ const AdminReports = () => {
 	};
 
 	return (
-		<div className={styles.root}>
-			<div className={styles.header}>
-				<Text className={styles.title}>Reports</Text>
+		<div className={defaultStyle.root}>
+			<div className={defaultStyle.header}>
+				<Text className={defaultStyle.title}>Reports</Text>
 				<Button
-					className={styles.createReportBtn}
+					className={clsx([formStyle.filledBtn], "w-auto")}
 					disabled={loadingReports}
 					onClick={() => setOpenCreateReportModal(true)}
 				>
-					<Text className={styles.createBtn}>+ Create a Report</Text>
+					<Text>+ Create a Report</Text>
 				</Button>
 			</div>
-			<div className={styles.searchContainer}>
-				<Title className={styles.panelTitle}>Search Panel</Title>
+			<div className={formStyle.formContainer}>
+				<Title className={formStyle.panelTitle}>Search Panel</Title>
 				<Form form={form} onFinish={handleSearch}>
-					<Row className={styles.searchOptionContainer} gutter={32}>
-						<Col className={styles.fieldContainer} flex={4}>
+					<Row className="mt-2 mb-8" gutter={32}>
+						<Col className={formStyle.fieldContainer} flex={4}>
 							<Form.Item
 								name="cust_id"
 								style={{ width: "100%", marginBottom: 0 }}
 							>
-								<Title className={styles.fieldTitle}>Search</Title>
+								<Title className={formStyle.fieldTitle}>Search</Title>
 								<Input
-									className={styles.searchBar}
+									className={formStyle.inputBar}
 									size="large"
 									placeholder=" Enter customer or report name or email"
 									prefix={<SearchOutlined />}
@@ -844,15 +899,14 @@ const AdminReports = () => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={3}>
+						<Col className={formStyle.fieldContainer} flex={3}>
 							<Form.Item
 								name="upload_date_time"
 								initialValue="Till Today"
 								style={{ width: "100%", marginBottom: 0 }}
 							>
-								<Title className={styles.fieldTitle}>Date</Title>
+								<Title className={formStyle.fieldTitle}>Date</Title>
 								<Select
-									className={styles.selectBar}
 									defaultValue="Till Today"
 									placeholder="Till Today"
 									options={date_options}
@@ -862,64 +916,63 @@ const AdminReports = () => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={3}>
+						<Col className={formStyle.fieldContainer} flex={3}>
 							<Form.Item
 								name="report_type"
 								style={{ width: "100%", marginBottom: 0 }}
 							>
-								<Title className={styles.fieldTitle}>Report Type</Title>
+								<Title className={formStyle.fieldTitle}>Report Type</Title>
 								<Select
-									className={styles.selectBar}
 									defaultValue="Select"
 									placeholder="Select"
+									popupClassName={formStyle.selectOptionOverflow}
 									options={reportTypeOptions}
 									onChange={(value) => form.setFieldValue("report_type", value)}
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={2}>
+						<Col className={formStyle.fieldContainer} flex={2}>
 							<Button
 								htmlType="submit"
-								className={styles.searchBtn}
+								className={clsx(formStyle.filledBtn, "w-full")}
 								disabled={loadingReports}
 							>
-								<Text className={styles.createBtn}>Search</Text>
+								<Text>Search</Text>
 							</Button>
 						</Col>
-						<Col className={styles.fieldContainer} flex={2}>
+						<Col className={formStyle.fieldContainer} flex={2}>
 							<Button
 								onClick={resetClearForm}
-								className={styles.clearBtn}
+								className={clsx(formStyle.outlinedBtn, "w-full")}
 								disabled={loadingReports}
 							>
-								<Text className={styles.createBtn}>Clear</Text>
+								<Text>Clear</Text>
 							</Button>
 						</Col>
 					</Row>
 				</Form>
-				<Row className={styles.OptionContainer} gutter={32}>
+				<Row className={tableStyles.OptionContainer} gutter={32}>
 					<Col flex={5}>
-						<Title className={styles.optionTitle}>
+						<Title className={tableStyles.optionTitle}>
 							List of Reports ({dataSource.length})
 						</Title>
 					</Col>
 					<Col flex={1}>
 						<Row>
-							<Col className={styles.sortContainer} flex={4}>
-								<Title className={styles.sortTitle}>Sort:</Title>
+							<Col className={tableStyles.sortContainer} flex={4}>
+								<Title className={tableStyles.sortTitle}>Sort:</Title>
 								<Select
 									defaultValue="Date"
-									className={styles.sortBar}
 									placeholder="Date"
 									options={sort_report_options}
 									onChange={handleSortChange}
+									className={tableStyles.sortBar}
 								/>
 							</Col>
-							<Col className={styles.viewIconContainer} flex={1}>
+							<Col className={tableStyles.viewIconContainer} flex={1}>
 								<Image
 									width={35}
 									height={35}
-									className={styles.viewIcon}
 									src={isTableView ? viewIcon : viewCardIcon}
 									preview={false}
 									onClick={() => {
@@ -945,12 +998,9 @@ const AdminReports = () => {
 					timeout={500}
 				>
 					{isTableView ? (
-						<div className={styles.content}>
+						<div className={tableStyles.content}>
 							<Table
-								className={styles.reportsTable}
-								rowClassName={(record, index) =>
-									index % 2 === 0 ? styles.tdStyleOdd : styles.tdStyleEven
-								}
+								className={tableStyles.dataTable}
 								rowKey="report_id"
 								bordered={false}
 								columns={columns}
@@ -975,169 +1025,212 @@ const AdminReports = () => {
 							/>
 						</div>
 					) : (
-						<div className={styles.content}>
-							<Row gutter={[24, 24]} justify="start">
-								{currentData.map((report, index) => (
-									<Col xs={24} sm={16} md={12} lg={8} key={index}>
-										<Card
-											className={styles.cardContainer}
-											style={{
-												backgroundColor:
-													index % 2 === 0 ? "#282828" : "transparent",
-											}}
-										>
-											<Row justify="space-between" align="middle">
-												<Col>
-													<Text className={styles.subtitle}>Upload Date</Text>
-													<br />
-													<Text className={styles.value}>
-														{dayjs(
-															new Date(report.upload_date_time)
-																.toISOString()
-																.split("T")[0]
-														).format("MM/DD/YYYY")}
-													</Text>
-												</Col>
-												<Col>
-													<Space>
-														<Button
-															icon={
-																<Image
-																	preview={false}
-																	style={{ backgroundColor: "transparent" }}
-																	src={viewDetailIcon}
+						<div className="mt-8 flex justify-center">
+							{currentData?.length > 0 ? (
+								<div>
+									<Row gutter={[24, 24]} justify="start">
+										{currentData.map((report, index) => (
+											<Col xs={24} sm={16} md={12} lg={8} key={index}>
+												<Card
+													className={clsx(
+														[cardStyles.cardContainer],
+														[
+															index % 2 === 0
+																? cardStyles.cardBackgroundEven
+																: cardStyles.cardBackgroundOdd,
+														]
+													)}
+												>
+													<Row justify="space-between" align="middle">
+														<Col>
+															<Text className={cardStyles.subtitle}>
+																Upload Date
+															</Text>
+															<br />
+															<Text className={cardStyles.value}>
+																{dayjs(
+																	new Date(report.upload_date_time)
+																		.toISOString()
+																		.split("T")[0]
+																).format("MM/DD/YYYY")}
+															</Text>
+														</Col>
+														<Col>
+															<Space>
+																<Button
+																	icon={
+																		<Image
+																			preview={false}
+																			style={{ backgroundColor: "transparent" }}
+																			src={viewDetailIcon}
+																		/>
+																	}
+																	onClick={() =>
+																		onOpenPDFReportPreview(report.url)
+																	}
+																	type="link"
+																	style={{ color: "#fff" }}
 																/>
-															}
-															type="link"
-															style={{ color: "#fff" }}
-														/>
-														<Divider
-															style={{
-																borderColor: "#667075",
-																borderWidth: 2,
-																marginInline: 0,
-															}}
-															type="vertical"
-														/>
-														<Button
-															icon={
-																<Image
-																	preview={false}
-																	style={{ backgroundColor: "transparent" }}
-																	src={downloadIcon}
+																<Divider
+																	style={{
+																		borderColor: "#667075",
+																		borderWidth: 2,
+																		marginInline: 0,
+																	}}
+																	type="vertical"
 																/>
-															}
-															type="link"
-															style={{ color: "#fff" }}
-														/>
-														<Divider
-															style={{
-																borderColor: "#667075",
-																borderWidth: 2,
-																marginInline: 0,
-															}}
-															type="vertical"
-														/>
-														<Button
-															icon={
-																<Image
-																	style={{ backgroundColor: "transparent" }}
-																	preview={false}
-																	src={deleteIcon}
+																<Button
+																	icon={
+																		<Image
+																			preview={false}
+																			style={{ backgroundColor: "transparent" }}
+																			src={downloadIcon}
+																		/>
+																	}
+																	type="link"
+																	style={{ color: "#fff" }}
+																	onClick={() =>
+																		onDownloadPDFReport(report.url)
+																	}
 																/>
-															}
-															type="link"
-															danger
-														/>
-													</Space>
-												</Col>
-											</Row>
-											<Divider
-												style={{
-													borderColor: index % 2 === 0 ? "#000" : "#282828",
-												}}
-											/>
-											<Row gutter={[16, 16]} style={{ rowGap: 10 }}>
-												<Col xs={24} sm={24}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>Customers</Text>
-														<p className={styles.value}>
-															{
-																customerOptions.find(
-																	(opt) => opt.cust_id === report.cust_id
-																)?.label
-															}
-														</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>Subsidiary</Text>
-														<p className={styles.value}>
-															{
-																subsidiariesOptions.find(
-																	(opt) => opt.value === report.subsidiary_id
-																)?.label
-															}
-														</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>Report Name</Text>
-														<p className={styles.value}>{report.report_name}</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={12}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>Report Type</Text>
-														<p className={styles.value}>
-															{
-																reportTypeOptions.find(
-																	(opt) => opt.value === report.report_type
-																)?.label
-															}
-														</p>
-													</Space>
-												</Col>
-												<Col>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>Uploaded by</Text>
-														<p className={styles.value}>{report.uploaded_by}</p>
-													</Space>
-												</Col>
-											</Row>
-										</Card>
-									</Col>
-								))}
-							</Row>
+																<Divider
+																	style={{
+																		borderColor: "#667075",
+																		borderWidth: 2,
+																		marginInline: 0,
+																	}}
+																	type="vertical"
+																/>
+																<Popconfirm
+																	title="Delete a report"
+																	description="Are you sure to delete this report?"
+																	placement="topRight"
+																	okText="Yes"
+																	cancelText="No"
+																	onConfirm={() => onDelete(report)}
+																>
+																	<Button
+																		icon={
+																			<Image
+																				style={{
+																					backgroundColor: "transparent",
+																				}}
+																				preview={false}
+																				src={deleteIcon}
+																			/>
+																		}
+																		type="link"
+																		danger
+																	/>
+																</Popconfirm>
+															</Space>
+														</Col>
+													</Row>
+													<Divider
+														style={{
+															borderColor: index % 2 === 0 ? "#000" : "#282828",
+														}}
+													/>
+													<Row gutter={[16, 16]} style={{ rowGap: 10 }}>
+														<Col xs={24} sm={24}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Customers
+																</Text>
+																<p className={cardStyles.value}>
+																	{
+																		customerOptions.find(
+																			(opt) => opt.cust_id === report.cust_id
+																		)?.label
+																	}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Subsidiary
+																</Text>
+																<p className={cardStyles.value}>
+																	{
+																		subsidiariesOptions.find(
+																			(opt) =>
+																				opt.value === report.subsidiary_id
+																		)?.label
+																	}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Report Name
+																</Text>
+																<p className={cardStyles.value}>
+																	{report.report_name}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Report Type
+																</Text>
+																<p className={cardStyles.value}>
+																	{
+																		reportTypeOptions.find(
+																			(opt) => opt.value === report.report_type
+																		)?.label
+																	}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Uploaded by
+																</Text>
+																<p className={cardStyles.value}>
+																	{report.uploaded_by}
+																</p>
+															</Space>
+														</Col>
+													</Row>
+												</Card>
+											</Col>
+										))}
+									</Row>
 
-							<div className={styles.cardPagination}>
-								<CardPagination
-									current={currentPage}
-									pageSize={pageSize}
-									showSizeChanger={false}
-									total={dataSource.length}
-									onChange={handlePageChange}
-									itemRender={itemRender}
-									responsive
-								/>
-							</div>
+									<div className={cardStyles.cardPagination}>
+										<CardPagination
+											current={currentPage}
+											pageSize={pageSize}
+											showSizeChanger={false}
+											total={dataSource.length}
+											onChange={handlePageChange}
+											itemRender={itemRender}
+											responsive
+										/>
+									</div>
+								</div>
+							) : (
+								<NodataView />
+							)}
 						</div>
 					)}
 				</CSSTransition>
@@ -1147,7 +1240,7 @@ const AdminReports = () => {
 
 			{/* Create Report Modal */}
 			<Modal
-				className={styles.createReportModal}
+				className={modalStyle.createModal}
 				open={openCreateReportModal}
 				onCancel={onCloseCreateReportModal}
 				footer={null}
@@ -1155,13 +1248,13 @@ const AdminReports = () => {
 			>
 				<Form
 					{...formLayout}
-					className={styles.createReportForm}
+					className={clsx(modalStyle.createForm)}
 					form={form}
 					requiredMark={false}
 					name="create-report"
 					onFinish={onSubmitCreateReportForm}
 				>
-					<Title className={styles.formTitle}>Create a Report</Title>
+					<Title className={modalStyle.formTitle}>Create a Report</Title>
 					<Row gutter={30}>
 						<Col sm={24}>
 							<Form.Item
@@ -1194,10 +1287,9 @@ const AdminReports = () => {
 							>
 								<Select
 									options={reportTypeOptions}
+									popupClassName={formStyle.selectOptionOverflow}
 									placeholder="Select"
 									defaultValue=""
-									showSearch
-									allowClear
 								/>
 							</Form.Item>
 						</Col>
@@ -1218,8 +1310,6 @@ const AdminReports = () => {
 									defaultValue=""
 									onChange={onChangeReportCustomer}
 									placeholder="Select"
-									showSearch
-									allowClear
 								/>
 							</Form.Item>
 						</Col>
@@ -1230,10 +1320,7 @@ const AdminReports = () => {
 								<Form.Item name="subsidiary_id" label="Subsidiary">
 									<Select
 										options={filteredSubsidiariesOptions}
-										showSearch
-										allowClear
-										// disabled={!currentCustomerOption}
-										disabled={false}
+										disabled={!currentCustomerOption}
 									/>
 								</Form.Item>
 							</Col>
@@ -1253,7 +1340,7 @@ const AdminReports = () => {
 								]}
 							>
 								<Dragger
-									className={styles.reportFileDragger}
+									className={modalStyle.fileDragger}
 									multiple={false}
 									name="file"
 									maxCount={1}
@@ -1275,13 +1362,10 @@ const AdminReports = () => {
 										<Image preview={false} src={FileUploadIcon} />
 									</p>
 									<p
-										className="ant-upload-hint"
-										style={{
-											color: "#8E8E8E",
-											marginBottom: 15,
-											fontFamily: "Poppins-Regular",
-											fontSize: "10px !important",
-										}}
+										className={clsx(
+											[modalStyle.fileDraggerTitle],
+											"ant-upload-hint"
+										)}
 									>
 										Support file type: .pdf / .docx / .csv
 									</p>
@@ -1289,22 +1373,22 @@ const AdminReports = () => {
 							</Form.Item>
 						</Col>
 					</Row>
-					<div className={styles.formActions}>
+					<div className={modalStyle.formActions}>
 						<Button
 							htmlType="button"
 							size="large"
-							className={styles.clearBtn}
-							onClick={onResetCreateReportForm}
+							className={clsx(formStyle.outlinedBtn, "w-full")}
+							onClick={onCloseCreateReportModal}
 						>
 							Cancel
 						</Button>
 						<Button
-							style={{ backgroundColor: "#498dce" }}
+							className={clsx(formStyle.filledBtn, "w-full")}
 							htmlType="submit"
 							size="large"
 							loading={creatingReport}
 						>
-							Submit
+							<span className={formStyle.filledBtnText}>Submit</span>
 						</Button>
 					</div>
 				</Form>
@@ -1312,7 +1396,7 @@ const AdminReports = () => {
 
 			{/* Pdf Preview Modal */}
 			<Modal
-				className={`${styles.pdfPreviewModal} pdfViewerV2Button`}
+				className={`${modalStyle.pdfPreviewModal} pdfViewerV2Button`}
 				open={openPdfPreviewModal}
 				onCancel={() => setOpenPdfPreviewModal(false)}
 				footer={null}

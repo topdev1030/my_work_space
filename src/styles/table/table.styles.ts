@@ -5,9 +5,14 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 	content: {
 		marginTop: 30,
 	},
-	datatTble: {
+	dataTable: {
 		flex: 1,
 		"& .ant-table": {
+			background: theme.colors.colorBgContainer,
+			paddingBottom: 20,
+			"& .ant-table-measure-row": {
+				display: "none",
+			},
 			"& th, & td": {
 				fontFamily: "poppins-medium",
 				fontSize: 13,
@@ -18,18 +23,29 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				color: "#8E8E8E !important",
 			},
 			"& tr > td": {
-				borderBottom: "16px solid #1C1C1C",
-				borderRed: "16px solid #1C1C1C",
+				padding: 0,
+				background: "none",
+				justifyContent: "center",
+				alignItems: "center",
+				borderBottom: 0,
+				"&:hover": {
+					background: "none",
+				},
+				// borderTop: "16px solid #1C1C1C",
 			},
 			"& th .ant-dropdown-open": {
 				visibility: "hidden",
 			},
 			"& tr > th": {
+				borderBottom: "1px solid #6B6B6B",
 				fontSize: 13,
 				fontFamily: "poppins-medium",
-				color: theme.colors.colorText,
+				color: theme.colors.colorFormSelectColor,
 				fontWeight: 400,
-				backgroundColor: theme.colors.colorMainBgBlack,
+				backgroundColor: theme.colors.colorMainBg,
+			},
+			"& .ant-table-cell-row-hover": {
+				background: "none !important",
 			},
 		},
 		"& .ant-pagination": {
@@ -44,14 +60,14 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				padding: "20px 0",
 				alignItems: "center",
 				display: "flex",
-				backgroundColor: "#1C1C1C",
+				backgroundColor: theme.colors.colorMainBg,
 			},
 			"& .ant-pagination-item-active > a": {
-				color: "#000",
+				color: theme.colors.colorText,
 				backgroundColor: "#498dce",
 			},
 			"& .ant-pagination-item > a": {
-				padding: "5px 13px",
+				padding: "5px 14px",
 			},
 			"& .ant-pagination-prev": {
 				fontFamily: "poppins-medium",
@@ -65,6 +81,12 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				marginInlineEnd: 0,
 				color: "#498dce",
 			},
+			"& .ant-pagination-prev.ant-pagination-disabled a[disabled]": {
+				color: "#6B6B6B !important",
+			},
+			"& .ant-pagination-next.ant-pagination-disabled a[disabled]": {
+				color: "#6B6B6B !important",
+			},
 			"& .ant-pagination-jump-next": {
 				border: "1px solid #498dce",
 				borderRight: 0,
@@ -73,7 +95,7 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				padding: "20px 0",
 				alignItems: "center",
 				display: "flex",
-				backgroundColor: "#1C1C1C",
+				backgroundColor: theme.colors.colorMainBg,
 			},
 			"& .ant-pagination-next": {
 				border: "1px solid #498dce",
@@ -100,105 +122,47 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 				padding: "20px 0",
 				alignItems: "center",
 				display: "flex",
-				backgroundColor: "#1C1C1C",
+				backgroundColor: theme.colors.colorMainBg,
 			},
 		},
+	},
+	tdFirstCell: {
+		borderTopLeftRadius: 10,
+		borderBottomLeftRadius: 10,
+		marginTop: 16,
+		padding: "16px 8px",
+		height: "100%",
+		display: "flex",
+		alignItems: "center",
+		background: "#282937",
+		minHeight: 64,
+	},
+	tdLastCell: {
+		borderTopRightRadius: 10,
+		borderBottomRightRadius: 10,
+		marginTop: 16,
+		padding: "16px 8px",
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		display: "flex",
+		background: "#282937",
+		minHeight: 64,
+	},
+	tdCell: {
+		marginTop: 16,
+		padding: "16px 8px",
+		height: "100%",
+		alignItems: "center",
+		display: "flex",
+		background: "#282937",
+		minHeight: 64,
 	},
 	tdStyleEven: {
-		backgroundColor: "#000000",
+		backgroundColor: theme.colors.colorFieldEvenBG,
 	},
 	tdStyleOdd: {
-		backgroundColor: "#272727",
-	},
-	cardPagination: {
-		display: "flex",
-		justifyContent: "center",
-		marginTop: "30px",
-		marginBottom: 10,
-
-		"& .ant-pagination": {
-			"& .ant-pagination-item": {
-				border: "1px solid #498dce",
-				borderRight: 0,
-				borderRadius: 0,
-				marginInlineEnd: 0,
-				padding: "20px 0",
-				alignItems: "center",
-				display: "flex",
-				backgroundColor: "#1C1C1C",
-			},
-			"& .ant-pagination-item-active > a": {
-				color: "#000",
-				backgroundColor: "#498dce",
-			},
-			"& .ant-pagination-item > a": {
-				padding: "5px 13px",
-			},
-			"& .ant-pagination-prev": {
-				display: "flex",
-				border: "1px solid #498dce",
-				borderTopRightRadius: 0,
-				borderBottomRightRadius: 0,
-				borderRight: 0,
-				padding: "20px 10px",
-				alignItems: "center",
-				marginInlineEnd: 0,
-				color: "#498dce",
-			},
-			"& .ant-pagination-jump-next": {
-				border: "1px solid #498dce",
-				borderRight: 0,
-				borderRadius: 0,
-				marginInlineEnd: 0,
-				padding: "20px 0",
-				alignItems: "center",
-				display: "flex",
-				backgroundColor: "#1C1C1C",
-			},
-			"& .ant-pagination-next": {
-				border: "1px solid #498dce",
-				borderTopLeftRadius: 0,
-				borderBottomLeftRadius: 0,
-				padding: "20px 20px",
-				alignItems: "center",
-				justifyContent: "end",
-				display: "flex",
-				color: "#498dce",
-			},
-			"& .ant-pagination-item-link-icon": {
-				padding: "0 9px",
-			},
-			"& .ant-pagination-item-ellipsis": {
-				padding: "0 5px",
-			},
-			"& .ant-pagination-jump-prev": {
-				border: "1px solid #498dce",
-				borderRight: 0,
-				borderRadius: 0,
-				marginInlineEnd: 0,
-				padding: "20px 0",
-				alignItems: "center",
-				display: "flex",
-				backgroundColor: "#1C1C1C",
-			},
-		},
-	},
-	cardContainer: {
-		backgroundColor: "#1c1c1e",
-		color: "#fff",
-		borderRadius: 10,
-
-		"& .ant-card-body": {
-			padding: "16px 8px",
-
-			"& .ant-divider-horizontal": {
-				margin: "10px 0",
-			},
-
-			"& .ant-space-gap-row-small": {
-				rowGap: 0,
-			},
-		},
+		backgroundColor: theme.colors.colorFieldOddBG,
 	},
 	tdIconStyle: {
 		borderTopRightRadius: 5,
@@ -210,96 +174,56 @@ const useTableStyles = createUseStyles((theme: Theme) => ({
 		justifyContent: "center",
 		gap: 12,
 	},
-	fileDragger: {
-		"& .ant-upload-drag-container": {
-			display: "flex",
-			flexDirection: "column",
-		},
-	},
-	subtitle: {
-		color: "rgba(255, 255, 255, 0.45)",
-		fontWeight: 400,
-		fontSize: 10,
-		fontFamily: "'Poppins-Regular'",
-	},
-	card_text_space: {
-		width: "100%",
-		overflow: "hidden",
-	},
-	value: {
-		color: "#FFF",
-		fontWeight: 500,
-		fontSize: 12,
-		fontFamily: "'Poppins-Regular'",
-		whiteSpace: "nowrap",
-		overflow: "hidden",
-		textOverflow: "ellipsis",
-		marginBottom: 0,
-	},
-	createModal: {
-		width: "fit-content !important",
-		"& .ant-modal-content": {
-			width: 540,
-			padding: 20,
-			backgroundColor: "#141414 !important",
-			borderRadius: 20,
-		},
-		"& .ant-modal-header": {
-			color: "#8E8E8E",
-			backgroundColor: "#141414 !important",
-		},
-	},
-	createForm: {
-		"& input, & input.form-control": {
-			width: "100%",
-			height: 50,
-			backgroundColor: "#282937 !important",
-		},
-		"& .ant-select-single": {
-			height: "50px !important",
-		},
-		"& .ant-select-selector": {
-			border: "1px solid #424242 !important",
-			borderRadius: 8,
-			backgroundColor: "#282937 !important",
-		},
-	},
-	formTitle: {
-		"&.ant-typography": {
-			textAlign: "start",
-			fontWeight: 600,
-			fontSize: 24,
-			textTransform: "none",
-			marginBottom: 20,
-		},
-	},
-	formActions: {
-		marginTop: 10,
-		display: "flex",
-		alignItems: "center",
-		gap: 20,
-		"& > button": {
-			flex: 1,
-			height: 50,
-			fontSize: 16,
-		},
-	},
-	pdfPreviewModal: {
-		width: "fit-content",
-		"& > .ant-modal-content": {
-			width: 612,
-			padding: 0,
-			background: "none",
-			border: "none",
-			borderRadius: 20,
-			"& > .ant-modal-close": {
-				right: -28,
-				top: 0,
-			},
-		},
-	},
 	invisible: {
 		visibility: "hidden",
+	},
+	OptionContainer: {
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	optionTitle: {
+		"&.ant-typography": {
+			fontFamily: "Poppins-ExtraLight",
+			fontSize: 20,
+			color: theme.colors.colorFontTitle,
+		},
+	},
+	sortContainer: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	sortTitle: {
+		marginBottom: "0 !important",
+		"&.ant-typography": {
+			fontSize: 14,
+			color: theme.colors.colorTextGray,
+		},
+	},
+	sortBar: {
+		width: "70%",
+		height: 22,
+
+		"& > .ant-select-selector": {
+			border: "0 !important",
+			backgroundColor: "transparent !important",
+			fontFamily: "Poppins-Medium",
+			fontSize: 14,
+			color: theme.colors.colorBgLightBlue,
+		},
+
+		"& .anticon-down": {
+			color: theme.colors.colorBgLightBlue,
+		},
+
+		"& > div > div >.ant-select-selection-placeholder": {
+			insetInlineEnd: "0 !important",
+		},
+	},
+	viewIconContainer: {
+		"& .ant-image": { display: "flex", float: "inline-end", marginRight: 10 },
 	},
 }));
 

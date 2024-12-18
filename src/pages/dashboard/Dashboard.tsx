@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import cx from "clsx";
+import cx, { clsx } from "clsx";
 import { useLocation } from "react-router-dom";
 
 import { Col, Layout } from "antd";
@@ -22,6 +22,7 @@ import { useAppSelector } from "@/redux";
 import { selectAccessToken } from "@/redux/auth";
 // styles
 import Title from "antd/es/typography/Title";
+import { useStyles } from "./Dashboard.styles";
 // types
 import { Vulnerability } from "./satisfic-table/table.types";
 import { chartData, pieData, filterOptions } from "./Dashboard.types";
@@ -55,6 +56,7 @@ const Dashboard: React.FC = () => {
 
 	const accessToken = useAppSelector(selectAccessToken);
 	const location = useLocation();
+	const styles = useStyles();
 
 	const getPieChartData = (data: any) => {
 		const totalSum = data.reduce(
@@ -220,9 +222,7 @@ const Dashboard: React.FC = () => {
 	}, [filterOption]);
 
 	return (
-		<Col
-			className={cx(location.pathname === "/dashboard" && { marginRight: 400 })}
-		>
+		<Col style={location.pathname === "/dashboard" ? { marginRight: 400 } : {}}>
 			<Head />
 			<div className="dashboard-page-container">
 				<div className="w-full">
@@ -231,8 +231,8 @@ const Dashboard: React.FC = () => {
 				<ChartPanel valueData={chartData} pieData={pieData} />
 				<div className="mt-10 w-full">
 					<Title
-						className="font-poppines"
-						style={{ fontSize: 20, color: "#FFFFFF", alignSelf: "start" }}
+						level={2}
+						className={clsx([styles.tableTitle], "align-self-start")}
 					>
 						Vulnerabilites
 					</Title>

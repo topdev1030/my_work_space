@@ -1,117 +1,120 @@
 const ENV = process.env.REACT_APP_ENV || process.env.NODE_ENV || "dev";
 
 const getConfig = () => {
-	switch (ENV) {
-		case "prod":
-			return {
-				api: {
-					baseUrl: "https://api.omegablack.io/api/v1",
-					mode: "prod",
-					timeout: 60000,
-				},
-				auth0: {
-					baseUrl: "https://omegablackprod.us.auth0.com",
-					audienceAuth0: "https://omegablackprod.us.auth0.com/api/v2/",
-					clientSecretForApi:
-						"6PQ3fDESmiOP8VM8EWCTM8nv0eTVO4LcPfOS0TeLwSMG1_rXulTUMS5i36iBrPxD",
-					grantType: "client_credentials",
-					clientIdForApi: "FcqCXAVnCrprPbh9v9YsKvZgrymGV3OA",
-					domain: "auth.omegablack.io",
-					audience: "https://api.omegablack.com",
-					clientId: "A3DED3rNHpadmZkuB1btBv3y2ZQTVWVx",
-					redirectUri: `${window.location.origin}/dashboard`,
-					returnTo: window.location.origin,
-					adminOrgId: "org_A3BEfTZqa0m8e5sc",
-				},
-				azure: {
-					storageAccountName: "omegablack",
-				},
-				reCaptcha: {
-					siteKey: "6LehwBApAAAAAOGHYJyMxfRtuEQHyq3LbqbSRXmQ",
-				},
-				vulnerabilities: {
-					url: "https://api.feedly.com/v3/trends/vulnerability-dashboard",
-					accessToken: "fe_kaea1FhxKgzIRlR1inft4TfZSIuMhtk4J67uDBv7",
-				},
-				feedly: {
-					url: process.env.REACT_APP_FEEDLY_URL || "",
-					accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
-				},
-			};
-		case "dev":
-			return {
-				api: {
-					baseUrl: "https://dev.api.omegablack.io/api/v1",
-					mode: "dev",
-					timeout: 60000,
-				},
-				auth0: {
-					baseUrl: "https://omegablackdev.us.auth0.com",
-					audienceAuth0: "https://omegablackdev.us.auth0.com/api/v2/",
-					clientSecretForApi:
-						"qyJ6kI3XKiA9TxhfcbfrtEfIm1TuabXqohWC0Lsc7pw789lJJLjKBTWk3v-1OxE4",
-					grantType: "client_credentials",
-					clientIdForApi: "k2fU59jePY7Hf1VxOYHvB5gLWhkKS4e0",
-					domain: "omegablackdev.us.auth0.com",
-					audience: "https://api.omegablackdev.com",
-					clientId: "QZFGRtokDfYDBSSNED4BHPfrnGjvdiee",
-					redirectUri: `${window.location.origin}/dashboard`,
-					returnTo: window.location.origin,
-					adminOrgId: "org_BJE2cFSsdptLybDe",
-				},
-				azure: {
-					storageAccountName: "devomegablack",
-				},
-				reCaptcha: {
-					siteKey: "6LehwBApAAAAAOGHYJyMxfRtuEQHyq3LbqbSRXmQ",
-				},
-				vulnerabilities: {
-					url: "https://api.feedly.com/v3/trends/vulnerability-dashboard",
-					accessToken: "fe_kaea1FhxKgzIRlR1inft4TfZSIuMhtk4J67uDBv7",
-				},
-				feedly: {
-					url: process.env.REACT_APP_FEEDLY_URL || "",
-					accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
-				},
-			};
-		case "local":
-		default:
-			return {
-				api: {
-					baseUrl: "http://192.168.1.126:8080/api/v1",
-					mode: "local",
-					timeout: 60000,
-				},
-				auth0: {
-					baseUrl: "https://omegablackdev.us.auth0.com",
-					audienceAuth0: "https://omegablackdev.us.auth0.com/api/v2/",
-					clientSecretForApi:
-						"qyJ6kI3XKiA9TxhfcbfrtEfIm1TuabXqohWC0Lsc7pw789lJJLjKBTWk3v-1OxE4",
-					grantType: "client_credentials",
-					clientIdForApi: "k2fU59jePY7Hf1VxOYHvB5gLWhkKS4e0",
-					domain: "omegablackdev.us.auth0.com",
-					audience: "https://api.omegablackdev.com",
-					clientId: "QZFGRtokDfYDBSSNED4BHPfrnGjvdiee",
-					redirectUri: `${window.location.origin}/dashboard`,
-					returnTo: window.location.origin,
-					adminOrgId: "org_BJE2cFSsdptLybDe",
-				},
-				azure: {
-					storageAccountName: "devomegablack",
-				},
-				reCaptcha: {
-					siteKey: "6LehwBApAAAAAOGHYJyMxfRtuEQHyq3LbqbSRXmQ",
-				},
-				vulnerabilities: {
-					url: "https://api.feedly.com/v3/trends/vulnerability-dashboard",
-					accessToken: "fe_kaea1FhxKgzIRlR1inft4TfZSIuMhtk4J67uDBv7",
-				},
-				feedly: {
-					url: process.env.REACT_APP_FEEDLY_URL || "",
-					accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
-				},
-			};
-	}
+  switch (ENV) {
+    case "prod":
+      return {
+        api: {
+          baseUrl: process.env.REACT_APP_LOCAL_API_BASEURL || "",
+          mode: "local",
+          timeout: 60000,
+        },
+        auth0: {
+          baseUrl: process.env.REACT_APP_LOCAL_AUTH0_BASEURL || "",
+          audienceAuth0: process.env.REACT_APP_LOCAL_AUDIENCE_AUTH0 || "",
+          clientSecretForApi:
+            process.env.REACT_APP_LOCAL_CLIENT_SECRETFOR_API || "",
+          grantType: process.env.REACT_APP_GRANT_TYPE || "",
+          clientIdForApi: process.env.REACT_APP_LOCAL_CLIENT_ID_FOR_API || "",
+          domain: process.env.REACT_APP_LOCAL_DOMAIN || "",
+          audience: process.env.REACT_APP_LOCAL_AUDIENCE || "",
+          clientId: process.env.REACT_APP_LOCAL_CLIENT_ID || "",
+          redirectUri: `${window.location.origin}/dashboard`,
+          returnTo: window.location.origin,
+          adminOrgId: process.env.REACT_APP_LOCAL_ADMIN_ORG_ID || "",
+        },
+        azure: {
+          storageAccountName:
+            process.env.REACT_APP_LOCAL_AZURE_STORAGE_ACCOUNT_NAME || "",
+        },
+        reCaptcha: {
+          siteKey: process.env.REACT_APP_RECAPTCHA_SITEKEY || "",
+        },
+        vulnerabilities: {
+          url: process.env.REACT_APP_VULNERABILITIES_URL || "",
+          accessToken: process.env.REACT_APP_VULNERABILITIES_TOKEN || "",
+        },
+        feedly: {
+          url: process.env.REACT_APP_FEEDLY_URL || "",
+          accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
+        },
+      };
+    case "dev":
+      return {
+        api: {
+          baseUrl: process.env.REACT_APP_LOCAL_API_BASEURL || "",
+          mode: "local",
+          timeout: 60000,
+        },
+        auth0: {
+          baseUrl: process.env.REACT_APP_LOCAL_AUTH0_BASEURL || "",
+          audienceAuth0: process.env.REACT_APP_LOCAL_AUDIENCE_AUTH0 || "",
+          clientSecretForApi:
+            process.env.REACT_APP_LOCAL_CLIENT_SECRETFOR_API || "",
+          grantType: process.env.REACT_APP_GRANT_TYPE || "",
+          clientIdForApi: process.env.REACT_APP_LOCAL_CLIENT_ID_FOR_API || "",
+          domain: process.env.REACT_APP_LOCAL_DOMAIN || "",
+          audience: process.env.REACT_APP_LOCAL_AUDIENCE || "",
+          clientId: process.env.REACT_APP_LOCAL_CLIENT_ID || "",
+          redirectUri: `${window.location.origin}/dashboard`,
+          returnTo: window.location.origin,
+          adminOrgId: process.env.REACT_APP_LOCAL_ADMIN_ORG_ID || "",
+        },
+        azure: {
+          storageAccountName:
+            process.env.REACT_APP_LOCAL_AZURE_STORAGE_ACCOUNT_NAME || "",
+        },
+        reCaptcha: {
+          siteKey: process.env.REACT_APP_RECAPTCHA_SITEKEY || "",
+        },
+        vulnerabilities: {
+          url: process.env.REACT_APP_VULNERABILITIES_URL || "",
+          accessToken: process.env.REACT_APP_VULNERABILITIES_TOKEN || "",
+        },
+        feedly: {
+          url: process.env.REACT_APP_FEEDLY_URL || "",
+          accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
+        },
+      };
+    case "local":
+    default:
+      return {
+        api: {
+          baseUrl: process.env.REACT_APP_LOCAL_API_BASEURL || "",
+          mode: "local",
+          timeout: 60000,
+        },
+        auth0: {
+          baseUrl: process.env.REACT_APP_LOCAL_AUTH0_BASEURL || "",
+          audienceAuth0: process.env.REACT_APP_LOCAL_AUDIENCE_AUTH0 || "",
+          clientSecretForApi:
+            process.env.REACT_APP_LOCAL_CLIENT_SECRETFOR_API || "",
+          grantType: process.env.REACT_APP_GRANT_TYPE || "",
+          clientIdForApi: process.env.REACT_APP_LOCAL_CLIENT_ID_FOR_API || "",
+          domain: process.env.REACT_APP_LOCAL_DOMAIN || "",
+          audience: process.env.REACT_APP_LOCAL_AUDIENCE || "",
+          clientId: process.env.REACT_APP_LOCAL_CLIENT_ID || "",
+          redirectUri: `${window.location.origin}/dashboard`,
+          returnTo: window.location.origin,
+          adminOrgId: process.env.REACT_APP_LOCAL_ADMIN_ORG_ID || "",
+        },
+        azure: {
+          storageAccountName:
+            process.env.REACT_APP_LOCAL_AZURE_STORAGE_ACCOUNT_NAME || "",
+        },
+        reCaptcha: {
+          siteKey: process.env.REACT_APP_RECAPTCHA_SITEKEY || "",
+        },
+        vulnerabilities: {
+          url: process.env.REACT_APP_VULNERABILITIES_URL || "",
+          accessToken: process.env.REACT_APP_VULNERABILITIES_TOKEN || "",
+        },
+        feedly: {
+          url: process.env.REACT_APP_FEEDLY_URL || "",
+          accessToken: process.env.REACT_APP_FEEDLY_TOKEN,
+        },
+      };
+  }
 };
 
 export default getConfig();

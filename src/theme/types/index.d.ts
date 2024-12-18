@@ -82,30 +82,40 @@ export interface Theme {
 		colorBrandBlack100: string;
 		colorBrandBlue100: string;
 		colorBrandBlue200: string;
+		colorBrandBlue300: string;
+		colorBrandBlue400: string;
 		colorBrandRed100: string;
 		colorBrandRed200: string;
+		colorBrandRed300: string;
 		colorBrandYellow100: string;
 		colorBrandYellow200: string;
 		colorBrandGray100: string;
+		colorBrandOrange100: string;
 		colorTextGray: string;
+		colorCardGradient: stringm;
 		// black color
-		colorMainBgBlack: string;
-		colorSiderBGBlack: string;
-		colorFormBGBlack: string;
-		colorFieldOddBGBlack: string;
-		colorFieldEvenBGBlack: string;
-		colorModalBgBlack: string;
-		colorFormBorderBlack: string;
-		colorFontTitleBlack: string;
-		// white color
-		colorMainBgWhite: string;
-		colorSiderBGWhite: string;
-		colorFormBGWhite: string;
-		colorFieldOddBGWhite: string;
-		colorFieldEvenBGWhite: string;
-		colorModalBgwhite: string;
-		colorFormBorderWhite: string;
-		colorFontTitleWhite: string;
+		colorMainBg: string;
+		colorSiderBG: string;
+		colorFormBG: string;
+		colorDrawerBG: string;
+		colorFieldOddBG: string;
+		colorFieldEvenBG: string;
+		colorModalBg: string;
+		colorFormBorder: string;
+		colorFontTitle: string;
+		colorFormSelectColor: string;
+		colorFormSearchColor: string;
+		colorSiderRightBG: string;
+		colorCardBG: string;
+		colorButtonText: string;
+		colorBUttonImmutate: string;
+		colorBgHover: string;
+		colorCircleBg: string;
+		colorButtonHover: string;
+		colorTextGray200: string;
+		colorTextTertiaryImmutate: string;
+		colorTextQuaternaryImmutate: string;
+		colorTagText: string;
 		// other colors
 		colorBgLightBlue: string;
 		colorBgOrange: string;
@@ -113,7 +123,7 @@ export interface Theme {
 		colorBlack600: string;
 		colorBlack900: string;
 	};
-	darkColors: {
+	lightColors: {
 		colorPrimaryBg: string;
 		colorPrimaryBgHover: string;
 		colorPrimaryBorder: string;
@@ -186,30 +196,33 @@ export interface Theme {
 		colorBrandBlack100: string;
 		colorBrandBlue100: string;
 		colorBrandBlue200: string;
+		colorBrandBlue300: string;
+		colorBrandBlue400: string;
 		colorBrandRed100: string;
 		colorBrandRed200: string;
+		colorBrandRed300: string;
 		colorBrandYellow100: string;
 		colorBrandYellow200: string;
 		colorBrandGray100: string;
+		colorBrandOrange100: string;
 		colorTextGray: string;
+		colorFormSelectColor: string;
+		colorFormSearchColor: string;
+		colorSiderRightBG: string;
+		colorCardBG: string;
+		colorCardGradient: string;
+		colorButtonText: string;
+		colorBUttonImmutate: string;
+		colorBgHover: string;
+		colorCircleBg: string;
+		colorButtonHover: string;
+		colorTextGray200: string;
+		colorDrawerBG: string;
+		colorTextTertiaryImmutate: string;
+		colorTextQuaternaryImmutate: string;
+		colorTagText: string;
 		// black color
-		colorMainBgBlack: string;
-		colorSiderBGBlack: string;
-		colorFormBGBlack: string;
-		colorFieldOddBGBlack: string;
-		colorFieldEvenBGBlack: string;
-		colorModalBgBlack: string;
-		colorFormBorderBlack: string;
-		colorFontTitleBlack: string;
-		// white color
-		colorMainBgWhite: string;
-		colorSiderBGWhite: string;
-		colorFormBGWhite: string;
-		colorFieldOddBGWhite: string;
-		colorFieldEvenBGWhite: string;
-		colorModalBgwhite: string;
-		colorFormBorderWhite: string;
-		colorFontTitleWhite: string;
+
 		// other colors
 		colorBgLightBlue: string;
 		colorBgOrange: string;

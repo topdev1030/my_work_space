@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, Fragment } from "react";
-import { message } from "antd";
+import { message, Image, Divider } from "antd";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import axios from "axios";
@@ -17,6 +17,9 @@ import {
 
 // icons
 import { Icons } from "@/theme/icons";
+import { FilePdfOutlined } from "@ant-design/icons";
+import patchedIcon from "../../../static/images/patched_icon.svg";
+import webIcon from "../../../static/images/web_icon.svg";
 
 // service
 import { feedlyService } from "@/services";
@@ -135,8 +138,11 @@ const NewsVulnDrawerCVE = ({
 	} = vulnCVE;
 
 	const renderMeterDial = () => {
-		const { cvss, cvssCategoryEstimate } =
-			vulnerability.vulnerabilitiesMetadata;
+		const { cvssCategoryEstimate } = vulnCVE;
+
+		const cvss = vulnCVE?.cvssV4
+			? vulnCVE?.cvssV4?.baseScore
+			: vulnCVE?.cvssV3?.baseScore;
 		if (cvss) {
 			return <CVSSDial cvss={cvss} epss={Number(vulnCVE.epssScore)} />;
 		}
@@ -161,7 +167,11 @@ const NewsVulnDrawerCVE = ({
 									{idx > 0 && (
 										<span className={styles.featureSeparator}>•</span>
 									)}
-									<Text className={styles.feature}>{text}</Text>
+									{idx > 0 ? (
+										<Text className={styles.feature}>{text}</Text>
+									) : (
+										<Text className={styles.trendsFeature}>{text}</Text>
+									)}
 								</Fragment>
 							))}
 						</div>
@@ -174,8 +184,8 @@ const NewsVulnDrawerCVE = ({
 					)}
 					{publishedDate && publicationDateInfo.length > 0 && (
 						<Paragraph className={styles.metadata}>
-							Published: {dayjs(publishedDate).format("MMM D, YYYY")} / Updated:{" "}
-							{dayjs(publicationDateInfo[0].publishedDate).fromNow()}
+							Published on {dayjs(publishedDate).format("MM/DD/YYYY")} /
+							Updated: {dayjs(publicationDateInfo[0].publishedDate).fromNow()}
 						</Paragraph>
 					)}
 					<div className={styles.actions}>
@@ -183,10 +193,16 @@ const NewsVulnDrawerCVE = ({
 							icon={<Icons glyph="nvd-outlined" />}
 							onClick={() => onOpenNVD()}
 						/>
+						<Divider className={styles.divider} type="vertical" />
 						<Button
 							icon={<Icons glyph="copy-outlined" />}
 							onClick={() => onCopyCVEOverview()}
 						/>
+						<Divider className={styles.divider} type="vertical" />
+						<div className="flex items-center">
+							<FilePdfOutlined className={styles.pdfIcon} />
+							<a className={styles.pdfLabel}>Export as PDF</a>
+						</div>
 					</div>
 				</div>
 				<div className={styles.dial}>{renderMeterDial()}</div>
@@ -320,7 +336,7 @@ const NewsVulnDrawerCVE = ({
 										className={styles.tag}
 										onClick={onOpenNVD}
 									>
-										<Icons glyph="screen-outlined" />
+										<Image src={webIcon} preview={false} />
 										<Text className={styles.tagText}>
 											{vendor}
 											<span>/</span>
@@ -393,7 +409,7 @@ const NewsVulnDrawerCVE = ({
 										className={styles.tag}
 										onClick={() => window.open(url, "_blank")}
 									>
-										<Icons glyph="atom-outlined" />
+										<Image src={patchedIcon} preview={false} />
 										<Text className={styles.tagText}>{title}</Text>
 									</Tag>
 								))}

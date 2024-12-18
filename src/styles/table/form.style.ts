@@ -1,7 +1,7 @@
 import { createUseStyles } from "react-jss";
 import { Theme } from "@/theme";
 
-const useSearchFormStyles = createUseStyles((theme: Theme) => ({
+const useFormStyles = createUseStyles((theme: Theme) => ({
 	content: {
 		marginTop: 30,
 	},
@@ -14,7 +14,7 @@ const useSearchFormStyles = createUseStyles((theme: Theme) => ({
 			},
 		},
 	},
-	searchContainer: {
+	formContainer: {
 		display: "flex",
 		flexDirection: "column",
 		marginTop: "35px",
@@ -23,13 +23,9 @@ const useSearchFormStyles = createUseStyles((theme: Theme) => ({
 		"&.ant-typography": {
 			fontFamily: "Poppins-ExtraLight",
 			fontSize: 20,
-			color: "#FFF",
+			color: theme.colors.colorFontTitle,
 			marginBottom: 20,
 		},
-	},
-	searchOptionContainer: {
-		marginTop: 10,
-		marginBottom: 30,
 	},
 	fieldContainer: {
 		display: "flex",
@@ -37,25 +33,35 @@ const useSearchFormStyles = createUseStyles((theme: Theme) => ({
 		alignItems: "flex-start",
 		justifyContent: "end",
 	},
+	formItem: {
+		"& .ant-form-item-label > label": {
+			fontSize: 12,
+			fontWeight: 500,
+			color: theme.colors.colorFormSelectColor,
+		},
+	},
 	fieldTitle: {
 		"&.ant-typography": {
 			fontFamily: "Poppins-Regular",
 			fontSize: 12,
-			color: "#8E8E8E",
+			fontWeight: 500,
+			color: theme.colors.colorFormSelectColor,
 		},
 	},
-	searchField: {
+	inputField: {
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "flex-start",
 	},
+	formTextarea: {
+		background: theme.colors.colorFormBG,
+	},
 	searchText: {
 		marginBottom: 5,
 	},
-	searchBar: {
-		width: "100%",
+	inputBar: {
 		height: 48,
-		backgroundColor: "#282937",
+		backgroundColor: theme.colors.colorFormBG,
 		borderRadius: 10,
 		"&.ant-typography": {
 			fontFamily: "Poppins-Regular",
@@ -63,33 +69,34 @@ const useSearchFormStyles = createUseStyles((theme: Theme) => ({
 			color: "#6B6B6B",
 		},
 	},
-	selectBar: {
-		width: "100%",
-		height: 48,
-		"& .ant-select-selector": {
-			border: "1px solid #424242 !important",
-			borderRadius: 8,
-			fontFamily: "Poppins-Regular",
-			fontSize: 12,
-			color: "#8E8E8E",
-			backgroundColor: "#282937 !important",
+	selectOptionOverflow: {
+		"& .rc-virtual-list-holder": {
+			marginRight: 15,
+		},
+		"&::-webkit-scrollbar": {
+			display: "none",
 		},
 	},
-	searchBtn: {
-		width: "100%",
+	filledBtn: {
 		height: 48,
 		border: 0,
 		borderRadius: 10,
-		backgroundColor: "#498DCE",
+		background: "#498DCE",
 		"& .ant-typography": {
 			fontFamily: "Poppins-Medium",
 			fontSize: 16,
-			color: "#FFF",
+			color: "#FFFFFF",
+		},
+		"&:hover": {
+			background: `${theme.colors.colorButtonHover} !important`,
 		},
 	},
-	clearBtn: {
-		width: "100%",
-		border: "1px solid",
+	filledBtnText: {
+		color: "#FFFFFF",
+	},
+	outlinedBtn: {
+		justifyContent: "center",
+		alignItems: "center",
 		borderColor: "#498DCE",
 		height: 48,
 		borderRadius: 10,
@@ -102,4 +109,4 @@ const useSearchFormStyles = createUseStyles((theme: Theme) => ({
 	},
 }));
 
-export { useSearchFormStyles };
+export { useFormStyles };

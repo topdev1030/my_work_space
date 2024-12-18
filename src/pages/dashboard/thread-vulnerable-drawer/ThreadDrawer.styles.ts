@@ -7,6 +7,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 		zIndex: 99,
 		"& .ant-drawer-body": {
 			padding: 0,
+			overflow: "hidden",
 		},
 	},
 	entryContainer: {
@@ -29,7 +30,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 		borderRadius: 44,
 		fontSize: 14,
 		fontWeight: 500,
-		color: theme.colors.colorBrandWhite,
+		color: "#FFFFFF",
 	},
 	category: {
 		"&.ant-typography": {
@@ -38,7 +39,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 			fontWeight: 500,
 			letterSpacing: 0,
 			lineHeight: "1em",
-			color: theme.colors.colorTextTertiary,
+			color: "#FFFFFF",
 			textTransform: "uppercase",
 		},
 	},
@@ -47,7 +48,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 			marginTop: "8px !important",
 			marginBottom: 8,
 			maxWidth: 480,
-			color: theme.colors.colorBrandWhite,
+			color: "#FFFFFF",
 			fontSize: 34,
 			fontWeight: 700,
 			lineHeight: 1.25,
@@ -62,7 +63,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 		fontWeight: 500,
 		letterSpacing: 0,
 		lineHeight: 1.5,
-		color: theme.colors.colorText,
+		color: "#FFFFFF",
 		background: alpha(theme.colors.colorError, 0.2),
 	},
 	trendingGraphImage: {
@@ -73,7 +74,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
 	},
 	nArticlesPastYear: {
 		marginTop: 8,
-		color: theme.colors.colorText,
+		color: theme.colors.colorTextTertiaryImmutate,
 		fontSize: 12,
 		fontWeight: 400,
 	},
@@ -235,6 +236,37 @@ const useStyles = createUseStyles((theme: Theme) => ({
 			height: 80,
 		},
 	},
+	scrollableContent: {
+		maxHeight: 400, // Limit height and enable scroll
+		overflowY: "auto",
+		padding: 10,
+		backgroundColor: "#f9f9f9",
+		border: "1px solid #ddd",
+	},
+	// "@media print": {
+	// 	"@global": {
+	// 		"body *": {
+	// 			visibility: "hidden", // Hide all elements initially
+	// 		},
+	// 		"#printable-content": {
+	// 			position: "absolute",
+	// 			left: 0,
+	// 			top: 0,
+	// 			width: "100%",
+	// 			height: "auto",
+	// 			overflow: "visible", // Remove scrolling
+	// 			backgroundColor: "white",
+	// 			color: "black",
+	// 			"& *": {
+	// 				visibility: "visible", // Show only the printable content
+	// 			},
+	// 		},
+	// 		".expand-for-print": {
+	// 			maxHeight: "none !important",
+	// 			overflow: "visible !important",
+	// 		},
+	// 	},
+	// },
 }));
 
-export { useStyles };
+export { useStyles as usethreadDrawerStyles };

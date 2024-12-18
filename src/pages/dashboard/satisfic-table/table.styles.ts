@@ -4,12 +4,25 @@ import { Theme } from "@/theme";
 const tableStyles = createUseStyles((theme: Theme) => ({
 	drawerRoot: {
 		zIndex: 99,
+		"& .ant-drawer-content": {
+			borderRadius: "0 20px 20px 20px",
+		},
 		"& .ant-drawer-body": {
-			backgroundColor: "#141414",
+			backgroundColor: theme.colors.colorModalBg,
+			overflow: "hidden",
 			padding: 0,
+			"&::-webkit-scrollbar": {
+				width: "16px",
+			},
+			"&::-webkit-scrollbar-thumb": {
+				borderRadius: "10px",
+				backgroundColor: "#498DCE",
+				border: "4px solid transparent",
+				backgroundClip: "padding-box",
+			},
 		},
 		"& .ant-drawer-header": {
-			backgroundColor: "#141414",
+			backgroundColor: theme.colors.colorModalBg,
 		},
 	},
 	entryContainer: {
@@ -29,6 +42,7 @@ const tableStyles = createUseStyles((theme: Theme) => ({
 		color: "#6B6B6B",
 	},
 	tagStyle: {
+		height: "fit-content",
 		border: "1px solid",
 		borderRadius: "16px",
 		padding: "2px 0px",
@@ -54,6 +68,10 @@ const tableStyles = createUseStyles((theme: Theme) => ({
 		padding: "10px 20px",
 		height: 44,
 		backgroundColor: "transparent",
+	},
+	tdSize: {
+		minHeight: "110px !important",
+		alignItems: "start",
 	},
 }));
 

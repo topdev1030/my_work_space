@@ -12,7 +12,12 @@
     "@babel/preset-typescript",
     "@babel/preset-react"
   ],
-  "plugins": []
+  "plugins": ["@babel/plugin-proposal-private-property-in-object"],
+  "env": {
+    "development": {
+      "plugins": [["react-refresh/babel", { "skipEnvCheck": true }]]
+    }
+  }
 }
 
 // {

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import debounce from "debounce";
 import clsx from "clsx";
 // import ant design
 import {
@@ -7,7 +6,6 @@ import {
 	Col,
 	Image,
 	message,
-	Select,
 	Card,
 	Space,
 	Form,
@@ -23,14 +21,15 @@ import type {
 	SorterResult,
 } from "antd/es/table/interface";
 // components
-import type { TableColumnType } from "@/components";
 import {
 	Button,
 	Input,
 	Table,
 	Typography,
-	Select as AtomSelect,
+	Select,
+	TableColumnType,
 } from "@/components";
+import { NodataView } from "@/components/templates/card-view";
 // Import TransitionGroup for animation
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 // helpers
@@ -50,13 +49,14 @@ import type {
 } from "./VendorMornitoring.types";
 // constants
 import { DEFAULT_PAGE_SIZE } from "@/components/atoms/table";
-import {
-	DEBOUNCE_WAIT,
-	DEFAULT_SORTER,
-	formLayout,
-} from "./VendorMornitoring.constants";
+import { DEFAULT_SORTER, formLayout } from "./VendorMornitoring.constants";
 // styles
 import { useStyles } from "./VendorMornitoring.styles";
+import { useCardStyles } from "@/styles/table/cardView.styles";
+import { useModalStyles } from "@/styles/table/modal.styles";
+import { useFormStyles } from "@/styles/table/form.style";
+import { useDefaultStyles } from "@/styles/table/defaultPage.styles";
+import { useTableStyles } from "@/styles/table/table.styles";
 // Icon imports
 import editIcon from "../../../static/images/edit.svg";
 import deleteIcon from "../../../static/images/deleteIcon.png";
@@ -113,8 +113,13 @@ const VendorMonitoring = () => {
 
 	const accessToken = useAppSelector(selectAccessToken);
 
-	const styles = useStyles();
 	const [form] = Form.useForm();
+	const styles = useStyles();
+	const cardStyles = useCardStyles();
+	const formStyle = useFormStyles();
+	const defaultStyle = useDefaultStyles();
+	const tableStyles = useTableStyles();
+	const modalStyle = useModalStyles();
 
 	const onCloseCreateVendorModal = () => {
 		setOpenCreateVendorModal(false);
@@ -254,70 +259,140 @@ const VendorMonitoring = () => {
 			title: "Vendor Name",
 			dataIndex: "vendor_name",
 			width: (15 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdFirstCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
 			title: "Information Provided",
 			dataIndex: "information_provided",
 			width: (25 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
 			title: "PII",
 			dataIndex: "pii",
 			width: (5 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
 			title: "ePHI",
 			dataIndex: "ephi",
 			width: (5 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
 			title: "Client Agent",
 			dataIndex: "client_agent",
 			width: (10 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
 			title: "Notes",
 			dataIndex: "notes",
 			width: (10 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
 			title: "NewsStreamID",
 			dataIndex: "newsStreamID",
 			width: (20 * 1628) / 100,
-			render: (value) => (
-				<Space direction="vertical" className={clsx([styles.card_text_space])}>
-					<p className={styles.value}>{value}</p>
-				</Space>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<Space
+						direction="vertical"
+						className={clsx([cardStyles.card_text_space])}
+					>
+						<p className={cardStyles.value}>{value}</p>
+					</Space>
+				</div>
 			),
 		},
 		{
@@ -325,28 +400,35 @@ const VendorMonitoring = () => {
 			dataIndex: "url",
 			align: "center",
 			width: (10 * 1628) / 100,
-			render: (value) => (
-				<div className={styles.uploadFileCol}>
-					<Button
-						shape="circle"
-						style={{ border: 0, backgroundColor: "transparent" }}
-						icon={<Image preview={false} src={editIcon} />}
-						onClick={() => onOpenUploadFile(value)}
-					/>
-					<Divider
-						style={{
-							borderColor: "#667075",
-							borderWidth: 2,
-							marginInline: 0,
-						}}
-						type="vertical"
-					/>
-					<Button
-						shape="circle"
-						style={{ border: 0, backgroundColor: "transparent" }}
-						icon={<Image preview={false} src={deleteIcon} />}
-						onClick={() => onDownloadUploadUrl(value)}
-					/>
+			render: (value, _, index: number) => (
+				<div
+					className={clsx(
+						[tableStyles.tdLastCell],
+						index % 2 === 0 ? tableStyles.tdStyleOdd : tableStyles.tdStyleEven
+					)}
+				>
+					<div className={styles.uploadFileCol}>
+						<Button
+							shape="circle"
+							style={{ border: 0, backgroundColor: "transparent" }}
+							icon={<Image preview={false} src={editIcon} />}
+							onClick={() => onOpenUploadFile(value)}
+						/>
+						<Divider
+							style={{
+								borderColor: "#667075",
+								borderWidth: 2,
+								marginInline: 0,
+							}}
+							type="vertical"
+						/>
+						<Button
+							shape="circle"
+							style={{ border: 0, backgroundColor: "transparent" }}
+							icon={<Image preview={false} src={deleteIcon} />}
+							onClick={() => onDownloadUploadUrl(value)}
+						/>
+					</div>
 				</div>
 			),
 		},
@@ -433,32 +515,30 @@ const VendorMonitoring = () => {
 	};
 
 	return (
-		<div className={styles.root}>
-			<div className={styles.header}>
-				<Text className={clsx([styles.title], "font-poppines")}>
+		<div className={defaultStyle.root}>
+			<div className={defaultStyle.header}>
+				<Text className={clsx([defaultStyle.title], "font-poppines")}>
 					Vendor Monitoring
 				</Text>
 				<Button
-					className={styles.createMessageBtn}
+					className={clsx([formStyle.filledBtn])}
 					disabled={loadingVendors}
 					onClick={() => setOpenCreateVendorModal(true)}
 				>
-					<Text className={clsx([styles.createBtn], "font-poppines")}>
-						+ Add a Vendor
-					</Text>
+					<Text>+ Add a Vendor</Text>
 				</Button>
 			</div>
-			<div className={styles.searchContainer}>
-				<Title className={styles.panelTitle}>Search Panel</Title>
+			<div className={formStyle.formContainer}>
+				<Title className={formStyle.panelTitle}>Search Panel</Title>
 				<Form form={form} onFinish={handleSearch}>
-					<Row className={styles.searchOptionContainer} gutter={32}>
-						<Col className={styles.fieldContainer} flex={4}>
+					<Row className="mt-2 mb-8" gutter={32}>
+						<Col className={formStyle.fieldContainer} flex={4}>
 							<Form.Item name="vendor_name" className="w-full mb-0">
-								<Title className={styles.fieldTitle}>Search</Title>
+								<Title className={formStyle.fieldTitle}>Search</Title>
 								<Input
 									size="large"
 									placeholder="Enter vendor name"
-									className={styles.searchBar}
+									className={formStyle.inputBar}
 									prefix={<SearchOutlined />}
 									onChange={(e) => {
 										form.setFieldValue("vendor_name", e.target.value);
@@ -466,58 +546,48 @@ const VendorMonitoring = () => {
 								/>
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={2}>
+						<Col className={formStyle.fieldContainer} flex={2}>
 							<Form.Item name="client_agent" className="w-full mb-0">
-								<Title className={styles.fieldTitle}>Client Agent</Title>
-								<AtomSelect
-									className={styles.selectBar}
+								<Title className={formStyle.fieldTitle}>Client Agent</Title>
+								<Select
 									placeholder="select"
 									options={options}
 									onChange={onchange}
 								/>
-								{/* <Select
-									placeholder="Select"
-									className={styles.selectBar}
-									options={options}
-									onChange={(value) =>
-										form.setFieldValue("client_agent", value)
-									}
-								/> */}
 							</Form.Item>
 						</Col>
-						<Col className={styles.fieldContainer} flex={1}>
+						<Col className={formStyle.fieldContainer} flex={1}>
 							<Button
 								htmlType="submit"
-								className={styles.searchBtn}
+								className={clsx([formStyle.filledBtn], "w-full")}
 								disabled={loadingVendors}
 							>
-								<Text className={styles.createBtn}>Search</Text>
+								<Text>Search</Text>
 							</Button>
 						</Col>
-						<Col className={styles.fieldContainer} flex={1}>
+						<Col className={formStyle.fieldContainer} flex={1}>
 							<Button
 								onClick={resetClearForm}
-								className={styles.clearBtn}
+								className={clsx([formStyle.outlinedBtn], "w-full")}
 								disabled={loadingVendors}
 							>
-								<Text className={styles.createBtn}>Clear</Text>
+								<Text>Clear</Text>
 							</Button>
 						</Col>
 					</Row>
 				</Form>
-				<Row className={styles.OptionContainer} gutter={32}>
+				<Row className={tableStyles.OptionContainer} gutter={32}>
 					<Col flex={5}>
-						<Title className={styles.optionTitle}>
+						<Title className={tableStyles.optionTitle}>
 							List of Vendors ({dataSource.length})
 						</Title>
 					</Col>
 					<Col flex={1}>
-						<Row className={styles.OptionContainer}>
-							<Col className={styles.viewIconContainer} flex={1}>
+						<Row className={tableStyles.OptionContainer}>
+							<Col className={tableStyles.viewIconContainer} flex={1}>
 								<Image
 									width={35}
 									height={35}
-									className={styles.viewIcon}
 									src={isTableView ? viewIcon : viewCardIcon}
 									preview={false}
 									onClick={() => {
@@ -542,12 +612,9 @@ const VendorMonitoring = () => {
 					timeout={500}
 				>
 					{isTableView ? (
-						<div className={styles.content}>
+						<div className={tableStyles.content}>
 							<Table
-								className={styles.uploadsTable}
-								rowClassName={(_, index) =>
-									index % 2 === 0 ? styles.tdStyleOdd : styles.tdStyleEven
-								}
+								className={clsx(tableStyles.dataTable, styles.vendorTable)}
 								rowKey="upload_date_time"
 								bordered={false}
 								columns={columns}
@@ -576,144 +643,163 @@ const VendorMonitoring = () => {
 						</div>
 					) : (
 						<div style={{ marginTop: 15 }}>
-							<Row justify="start" gutter={[24, 24]}>
-								{currentData.map((item, index) => (
-									<Col xs={24} sm={16} md={12} lg={8} key={index}>
-										<Card
-											className={styles.cardContainer}
-											style={{
-												backgroundColor:
-													index % 2 === 0 ? "#282828" : "transparent",
-											}}
-										>
-											<Row justify="space-between" align="middle">
-												<Col>
-													<Text className={styles.subtitle}>Vendor Name</Text>
-													<br />
-													<Text className={styles.value}>
-														{item.vendor_name}
-													</Text>
-												</Col>
-												<Col>
-													<Space>
-														<Button
-															icon={
-																<Image
-																	preview={false}
-																	style={{ backgroundColor: "transparent" }}
-																	src={editIcon}
+							{currentData?.length ? (
+								<div>
+									<Row justify="start" gutter={[24, 24]}>
+										{currentData.map((item, index) => (
+											<Col xs={24} sm={16} md={12} lg={8} key={index}>
+												<Card
+													className={clsx(
+														[cardStyles.cardContainer],
+														[
+															index % 2 === 0
+																? cardStyles.cardBackgroundEven
+																: cardStyles.cardBackgroundOdd,
+														]
+													)}
+												>
+													<Row justify="space-between" align="middle">
+														<Col>
+															<Text className={cardStyles.subtitle}>
+																Vendor Name
+															</Text>
+															<br />
+															<Text className={cardStyles.value}>
+																{item.vendor_name}
+															</Text>
+														</Col>
+														<Col>
+															<Space>
+																<Button
+																	icon={
+																		<Image
+																			preview={false}
+																			style={{ backgroundColor: "transparent" }}
+																			src={editIcon}
+																		/>
+																	}
+																	type="link"
+																	style={{ color: "#fff" }}
 																/>
-															}
-															type="link"
-															style={{ color: "#fff" }}
-														/>
-														<Divider
-															style={{
-																borderColor: "#667075",
-																borderWidth: 2,
-																marginInline: 0,
-															}}
-															type="vertical"
-														/>
-														<Button
-															icon={
-																<Image
-																	style={{ backgroundColor: "transparent" }}
-																	preview={false}
-																	src={deleteIcon}
+																<Divider
+																	style={{
+																		borderColor: "#667075",
+																		borderWidth: 2,
+																		marginInline: 0,
+																	}}
+																	type="vertical"
 																/>
-															}
-															type="link"
-															danger
-														/>
-													</Space>
-												</Col>
-											</Row>
-											<Divider
-												style={{
-													borderColor: index % 2 === 0 ? "#000" : "#282828",
-												}}
-											/>
-											<Row gutter={[16, 16]} style={{ rowGap: 10 }}>
-												<Col xs={24} sm={24}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>
-															Information Provided
-														</Text>
-														<p className={styles.value}>
-															{item.information_provided}
-														</p>
-													</Space>
-												</Col>
-												<Col xs={12} sm={8}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>PII</Text>
-														<p className={styles.value}>{item.pii}</p>
-													</Space>
-												</Col>
-												<Col xs={12} sm={8}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>ePHI</Text>
-														<p className={styles.value}>{item.ephi}</p>
-													</Space>
-												</Col>
-												<Col xs={12} sm={8}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>
-															Client Agent
-														</Text>
-														<p className={styles.value}>{item.client_agent}</p>
-													</Space>
-												</Col>
-												<Col xs={12} sm={12}>
-													<Space
-														direction="vertical"
-														className={styles.card_text_space}
-													>
-														<Text className={styles.subtitle}>Notes</Text>
-														<p className={styles.value}>{item.notes}</p>
-													</Space>
-												</Col>
-												<Col xs={24} sm={24}>
-													<Space
-														direction="vertical"
-														className={clsx([styles.card_text_space])}
-													>
-														<Text className={styles.subtitle}>
-															NewsStreamID
-														</Text>
-														<p className={styles.value}>{item.newsStreamID}</p>
-													</Space>
-												</Col>
-											</Row>
-										</Card>
-									</Col>
-								))}
-							</Row>
+																<Button
+																	icon={
+																		<Image
+																			style={{ backgroundColor: "transparent" }}
+																			preview={false}
+																			src={deleteIcon}
+																		/>
+																	}
+																	type="link"
+																	danger
+																/>
+															</Space>
+														</Col>
+													</Row>
+													<Divider
+														style={{
+															borderColor: index % 2 === 0 ? "#000" : "#282828",
+														}}
+													/>
+													<Row gutter={[16, 16]} style={{ rowGap: 10 }}>
+														<Col xs={24} sm={24}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Information Provided
+																</Text>
+																<p className={cardStyles.value}>
+																	{item.information_provided}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={12} sm={8}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>PII</Text>
+																<p className={cardStyles.value}>{item.pii}</p>
+															</Space>
+														</Col>
+														<Col xs={12} sm={8}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	ePHI
+																</Text>
+																<p className={cardStyles.value}>{item.ephi}</p>
+															</Space>
+														</Col>
+														<Col xs={12} sm={8}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Client Agent
+																</Text>
+																<p className={cardStyles.value}>
+																	{item.client_agent}
+																</p>
+															</Space>
+														</Col>
+														<Col xs={12} sm={12}>
+															<Space
+																direction="vertical"
+																className={cardStyles.card_text_space}
+															>
+																<Text className={cardStyles.subtitle}>
+																	Notes
+																</Text>
+																<p className={cardStyles.value}>{item.notes}</p>
+															</Space>
+														</Col>
+														<Col xs={24} sm={24}>
+															<Space
+																direction="vertical"
+																className={clsx([cardStyles.card_text_space])}
+															>
+																<Text className={cardStyles.subtitle}>
+																	NewsStreamID
+																</Text>
+																<p className={cardStyles.value}>
+																	{item.newsStreamID}
+																</p>
+															</Space>
+														</Col>
+													</Row>
+												</Card>
+											</Col>
+										))}
+									</Row>
 
-							<div className={styles.cardPagination}>
-								<CardPagination
-									current={currentPage}
-									pageSize={pageSize}
-									showSizeChanger={false}
-									total={dataSource.length}
-									onChange={handlePageChange}
-									itemRender={itemRender}
-									responsive
-								/>
-							</div>
+									<div className={cardStyles.cardPagination}>
+										<CardPagination
+											current={currentPage}
+											pageSize={pageSize}
+											showSizeChanger={false}
+											total={dataSource.length}
+											onChange={handlePageChange}
+											itemRender={itemRender}
+											responsive
+										/>
+									</div>
+								</div>
+							) : (
+								<NodataView />
+							)}
 						</div>
 					)}
 				</CSSTransition>
@@ -721,7 +807,7 @@ const VendorMonitoring = () => {
 
 			{/* send messgae modal */}
 			<Modal
-				className={clsx([styles.createMessageModal, "hide-scrollbar"])}
+				className={clsx([modalStyle.createModal, "hide-scrollbar"])}
 				open={openCreateVendorModal}
 				onCancel={onCloseCreateVendorModal}
 				footer={null}
@@ -733,13 +819,13 @@ const VendorMonitoring = () => {
 			>
 				<Form
 					{...formLayout}
-					className={styles.createMessageForm}
+					className={modalStyle.createForm}
 					form={form}
 					name="create-message"
 					requiredMark={false}
 					onFinish={onSubmitCreateVendorForm}
 				>
-					<Title className={clsx([styles.formTitle], "font-regular")}>
+					<Title className={clsx([modalStyle.formTitle], "font-regular")}>
 						Add a Vendor
 					</Title>
 					<Row gutter={30}>
@@ -787,11 +873,7 @@ const VendorMonitoring = () => {
 								}
 								rules={[{ required: true, message: "PII is required!" }]}
 							>
-								<Select
-									options={options}
-									placeholder="Select"
-									className={styles.selectBar}
-								/>
+								<Select options={options} placeholder="Select" />
 							</Form.Item>
 						</Col>
 						<Col sm={8}>
@@ -804,11 +886,7 @@ const VendorMonitoring = () => {
 								}
 								rules={[{ required: true, message: "ePHI is required!" }]}
 							>
-								<Select
-									options={options}
-									placeholder="Select"
-									className={styles.selectBar}
-								/>
+								<Select options={options} placeholder="Select" />
 							</Form.Item>
 						</Col>
 						<Col sm={8}>
@@ -823,11 +901,7 @@ const VendorMonitoring = () => {
 									{ required: true, message: "Client Agent is required!" },
 								]}
 							>
-								<Select
-									options={options}
-									placeholder="Select"
-									className={styles.selectBar}
-								/>
+								<Select options={options} placeholder="Select" />
 							</Form.Item>
 						</Col>
 					</Row>
@@ -867,7 +941,10 @@ const VendorMonitoring = () => {
 							>
 								<Input
 									variant="textarea"
-									style={{ minHeight: 80, backgroundColor: "#282937" }}
+									style={{
+										minHeight: 80,
+									}}
+									className={formStyle.formTextarea}
 									placeholder="Type In"
 								/>
 							</Form.Item>
@@ -916,7 +993,6 @@ const VendorMonitoring = () => {
 									<p
 										className="ant-upload-hint"
 										style={{
-											color: "#8E8E8E",
 											marginBottom: 15,
 											fontFamily: "Poppins-Regular",
 											fontSize: "10px !important",
@@ -928,16 +1004,20 @@ const VendorMonitoring = () => {
 							</Form.Item>
 						</Col>
 					</Row>
-					<div className={styles.formActions}>
+					<div className={modalStyle.formActions}>
 						<Button
 							htmlType="button"
-							className={styles.clearBtn}
-							onClick={onResetCreateVendorForm}
+							className={clsx([formStyle.outlinedBtn], "w-full")}
+							onClick={onCloseCreateVendorModal}
 						>
 							Cancel
 						</Button>
-						<Button type="primary" htmlType="submit" loading={creatingVendor}>
-							Save
+						<Button
+							className={clsx([formStyle.filledBtn], "w-full")}
+							htmlType="submit"
+							loading={creatingVendor}
+						>
+							<span className={formStyle.filledBtnText}>Save</span>
 						</Button>
 					</div>
 				</Form>

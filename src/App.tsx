@@ -32,7 +32,7 @@ import config from "./config";
 import "./styles/layout.css";
 
 const darkThemeColors = theme.colors;
-const lightThemeColors = theme.darkColors;
+const lightThemeColors = theme.lightColors;
 
 const App = () => {
 	const { isToggled } = useAppSelector(toggleState);
@@ -48,6 +48,17 @@ const App = () => {
 					token: {
 						...theme.colors,
 						fontFamily: "Poppins-Regular",
+					},
+					components: {
+						Table: {
+							headerSplitColor: "transparent",
+						},
+						Timeline: {
+							dotBg: "#83C8EE",
+							dotBorderWidth: 0,
+							tailColor: "#83C8EE",
+							itemPaddingBottom: 20,
+						},
 					},
 				}}
 			>
@@ -75,10 +86,13 @@ const App = () => {
 									path="/admin/vendor-monitoring"
 									element={<VendorMonitoring />}
 								/>
+								<Route path="/admin/news" element={<News />} />
 							</Route>
 
 							{/* Customer */}
 							<Route element={<RouteGuard roles={[USER_ROLE.CUSTOMER]} />}>
+								<Route path="/reports" element={<AdminReports />} />
+								<Route path="/uploads" element={<AdminUploads />} />
 								<Route path="/news" element={<News />} />
 								<Route
 									path="/intel-hub/reports"
